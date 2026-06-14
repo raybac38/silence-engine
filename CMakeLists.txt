@@ -1,23 +1,34 @@
 cmake_minimum_required(VERSION 3.20)
 project(MonProjet)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_subdirectory(external/bgfx.cmake EXCLUDE_FROM_ALL)
 add_subdirectory(external/SDL EXCLUDE_FROM_ALL)
 
-add_compile_options(
+add_executable(mon_app
+    ./src/main.cpp
+    ./src/window_system.cpp
+    ./src/core.cpp
+    ./src/system/transform_system.cpp
+    ./src/system/render_system.cpp
+)
+
+target_compile_options(mon_app PRIVATE
     -g
     -Wall
     -Wextra
-)
+    -Wpedantic
+    -Werror
 
-add_executable(mon_app
-    src/main.cpp
-    src/system/transform_system.cpp
-    src/system/render_system.cpp
+    -fsanitize=address,undefined
+
+    -Og
+)
+target_link_options(mon_app PRIVATE
+    -fsanitize=address,undefined
 )
 
 target_link_libraries(mon_app PRIVATE

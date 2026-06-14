@@ -7,7 +7,7 @@ pkgs.mkShell {
     pkg-config
     git
     tree
-    vscodium
+    vscode
 
     alsa-lib
 
@@ -34,5 +34,16 @@ pkgs.mkShell {
     wayland
     wayland-protocols
     libxkbcommon
+
+    libGL
+    libGLU
   ];
+
+  shellHook = ''
+  export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [
+    pkgs.vulkan-loader
+    pkgs.mesa
+    pkgs.libGL
+  ]}:$LD_LIBRARY_PATH
+'';
 }

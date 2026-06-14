@@ -1,0 +1,108 @@
+#include "render_system.h"
+
+#include <SDL3/SDL.h>
+#include <bgfx/bgfx.h>
+#include <bgfx/platform.h>
+#include "../window_system.h"
+#include <iostream>
+
+bool RenderSystem::init(WindowSystem *windowSystem)
+{
+    bgfx::PlatformData pd{};
+
+    SDL_PropertiesID props = windowSystem->getProperties();
+
+    const char *video_driver = SDL_GetCurrentVideoDriver();
+
+    // Linux Wayland
+    if (SDL_strcmp(video_driver, "wayland") == 0)
+    {
+        pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, nullptr);
+        pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, nullptr);
+    }
+    // Linux x11
+    else if (SDL_strcmp(video_driver, "x11") == 0)
+    {
+        pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, nullptr);
+        // Window ID is an integer, need to cast to a void* for bgfx
+        pd.nwh = reinterpret_cast<void *>(SDL_GetNumberProperty(props, SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0));
+    }
+    // Windows
+    else if (SDL_strcmp(video_driver, "windows") == 0)
+    {
+        // no display needed for bgfx on Windows
+        pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
+    }
+    // macOS
+    else if (SDL_strcmp(video_driver, "cocoa") == 0)
+    {
+        pd.ndt = nullptr;
+        // no display needed for bgfx on macOS
+        pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, nullptr);
+    }
+    // Linux without x11 or Wayland
+    else if (SDL_strcmp(video_driver, "kmsdrm") == 0)
+    {
+        pd.ndt = nullptr;
+        pd.nwh = reinterpret_cast<void *>(SDL_GetNumberProperty(props, SDL_PROP_WINDOW_KMSDRM_DRM_FD_NUMBER, -1));
+    }
+    else
+    {
+        std::cerr << "[ERROR] RenderSystem : driver not handle (" << video_driver << ")" << std::endl;
+        return false;
+    }
+
+    std::cout << "[INFO] RenderSystem : platform defined (" << video_driver << ")" << std::endl;
+
+    if (!pd.nwh)
+    {
+        std::cerr << "[ERROR] RenderSystem : cannot get window handler" << std::endl;
+        return false;
+    }
+
+    bgfx::Init init{};
+    init.type = bgfx::RendererType::Count;
+    init.platformData = pd;
+
+    init.resolution.width = windowSystem->getWidth();
+    init.resolution.height = windowSystem->getHeight();
+    init.resolution.reset = BGFX_RESET_VSYNC;
+
+    if (!bgfx::init(init))
+    {
+        std::cerr << "[ERROR] RenderSystem : failed initiate BGFX" << std::endl;
+        return false;
+    }
+
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+    bgfx::setViewRect(0, 0, 0, windowSystem->getWidth(), windowSystem->getHeight());
+
+    windowSystem->addListener(this);
+    return true;
+}
+
+bool RenderSystem::render()
+{
+
+    bgfx::touch(0); // use view 0
+    bgfx::frame();  // send the frame
+    return true;
+}
+
+bool RenderSystem::shutdown()
+{
+    bgfx::shutdown();
+    return true;
+}
+
+void RenderSystem::onQuit()
+{
+}
+
+void RenderSystem::onResize(int width, int height)
+{
+    bgfx::reset(width, height, BGFX_RESET_NONE);
+
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+    bgfx::setViewRect(0, 0, 0, width, height);
+}
