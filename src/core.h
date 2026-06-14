@@ -1,9 +1,9 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "window_system.h"
+#include "manager/window_manager.h"
 
-class Core : public WindowSystem::WindowEventListener
+class Core : public WindowManager::WindowEventListener
 {
 public:
     Core();

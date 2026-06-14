@@ -7,7 +7,7 @@
 #include <vector>
 #include <optional>
 
-class WindowSystem
+class WindowManager
 {
 public:
     class KeyListener
@@ -33,7 +33,7 @@ public:
         virtual void onQuit() = 0;
         virtual void onResize(int width, int height) = 0;
     };
-    ~WindowSystem();
+    ~WindowManager();
 
     bool init(const std::string &title, int width, int height);
     bool isOpen();
@@ -42,12 +42,12 @@ public:
 
     void pollEvent();
 
-    void addListener(KeyListener * listener);
-    void addListener(MouseListener * listener);
-    void addListener(WindowEventListener * listener);
-    void removeListener(KeyListener * listener);
-    void removeListener(MouseListener * listener);
-    void removeListener(WindowEventListener * listener);
+    void addListener(KeyListener *listener);
+    void addListener(MouseListener *listener);
+    void addListener(WindowEventListener *listener);
+    void removeListener(KeyListener *listener);
+    void removeListener(MouseListener *listener);
+    void removeListener(WindowEventListener *listener);
 
     int getWidth();
     int getHeight();

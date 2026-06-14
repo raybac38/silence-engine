@@ -4,12 +4,12 @@
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
-#include "./../window_system.h"
+#include "./../manager/window_manager.h"
 
-class RenderSystem : public WindowSystem::WindowEventListener
+class RenderSystem : public WindowManager::WindowEventListener
 {
 public:
-    bool init(WindowSystem *windowSystem);
+    bool init(WindowManager *windowSystem);
     bool render();
     bool shutdown();
 

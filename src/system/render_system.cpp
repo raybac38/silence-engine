@@ -3,14 +3,14 @@
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
-#include "../window_system.h"
+#include "../manager/window_manager.h"
 #include <iostream>
 
-bool RenderSystem::init(WindowSystem *windowSystem)
+bool RenderSystem::init(WindowManager *windowManager)
 {
     bgfx::PlatformData pd{};
 
-    SDL_PropertiesID props = windowSystem->getProperties();
+    SDL_PropertiesID props = windowManager->getProperties();
 
     const char *video_driver = SDL_GetCurrentVideoDriver();
 
@@ -64,8 +64,8 @@ bool RenderSystem::init(WindowSystem *windowSystem)
     init.type = bgfx::RendererType::Count;
     init.platformData = pd;
 
-    init.resolution.width = windowSystem->getWidth();
-    init.resolution.height = windowSystem->getHeight();
+    init.resolution.width = windowManager->getWidth();
+    init.resolution.height = windowManager->getHeight();
     init.resolution.reset = BGFX_RESET_VSYNC;
 
     if (!bgfx::init(init))
@@ -75,9 +75,9 @@ bool RenderSystem::init(WindowSystem *windowSystem)
     }
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
-    bgfx::setViewRect(0, 0, 0, windowSystem->getWidth(), windowSystem->getHeight());
+    bgfx::setViewRect(0, 0, 0, windowManager->getWidth(), windowManager->getHeight());
 
-    windowSystem->addListener(this);
+    windowManager->addListener(this);
     return true;
 }
 

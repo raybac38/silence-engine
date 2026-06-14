@@ -1,5 +1,5 @@
 #include "core.h"
-#include "window_system.h"
+#include "manager/window_manager.h"
 #include "system/render_system.h"
 #include <string>
 
@@ -14,7 +14,7 @@ Core::Core()
 
 void Core::run()
 {
-    WindowSystem window = WindowSystem();
+    WindowManager window = WindowManager();
 
     if (!window.init(windowTitle, windowDefaultWidth, windowDefaultHeight))
         exit(EXIT_FAILURE);
@@ -25,6 +25,10 @@ void Core::run()
     if (!renderer.init(&window))
         exit(EXIT_FAILURE);
 
+    /*
+        standard loop
+        input => gameplay => physic => render
+    */
     while (!quit)
     {
         window.pollEvent();

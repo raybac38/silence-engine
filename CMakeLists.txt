@@ -10,7 +10,7 @@ add_subdirectory(external/SDL EXCLUDE_FROM_ALL)
 
 add_executable(mon_app
     ./src/main.cpp
-    ./src/window_system.cpp
+    ./src/manager/window_manager.cpp
     ./src/core.cpp
     ./src/system/transform_system.cpp
     ./src/system/render_system.cpp

@@ -1,4 +1,4 @@
-#include "window_system.h"
+#include "window_manager.h"
 
 #include <SDL3/SDL.h>
 #include <cstdlib>
@@ -6,14 +6,14 @@
 #include <string>
 #include <algorithm>
 
-WindowSystem::~WindowSystem()
+WindowManager::~WindowManager()
 {
     if (this->window)
         SDL_DestroyWindow(this->window);
     SDL_Quit();
 }
 
-bool WindowSystem::init(const std::string &title, int width, int height)
+bool WindowManager::init(const std::string &title, int width, int height)
 {
     this->width = width;
     this->height = height;
@@ -37,32 +37,32 @@ bool WindowSystem::init(const std::string &title, int width, int height)
     return true;
 }
 
-bool WindowSystem::isOpen()
+bool WindowManager::isOpen()
 {
     return this->window != nullptr;
 }
 
-SDL_Window *WindowSystem::getWindow()
+SDL_Window *WindowManager::getWindow()
 {
     return this->window;
 }
 
-SDL_PropertiesID WindowSystem::getProperties()
+SDL_PropertiesID WindowManager::getProperties()
 {
     return SDL_GetWindowProperties(window);
 }
 
-int WindowSystem::getHeight()
+int WindowManager::getHeight()
 {
     return this->height;
 }
 
-int WindowSystem::getWidth()
+int WindowManager::getWidth()
 {
     return this->width;
 }
 
-void WindowSystem::pollEvent()
+void WindowManager::pollEvent()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -99,37 +99,37 @@ void WindowSystem::pollEvent()
     }
 }
 
-void WindowSystem::addListener(KeyListener *listener)
+void WindowManager::addListener(KeyListener *listener)
 {
     if (listener)
         this->keyListeners.push_back(listener);
 }
 
-void WindowSystem::addListener(MouseListener *listener)
+void WindowManager::addListener(MouseListener *listener)
 {
     if (listener)
         this->mouseListeners.push_back(listener);
 }
 
-void WindowSystem::addListener(WindowEventListener *listener)
+void WindowManager::addListener(WindowEventListener *listener)
 {
     if (listener)
         this->windowEventListeners.push_back(listener);
 }
 
-void WindowSystem::removeListener(KeyListener *listener)
+void WindowManager::removeListener(KeyListener *listener)
 {
     if (listener)
         keyListeners.erase(std::remove(keyListeners.begin(), keyListeners.end(), listener), keyListeners.end());
 }
 
-void WindowSystem::removeListener(MouseListener *listener)
+void WindowManager::removeListener(MouseListener *listener)
 {
     if (listener)
         mouseListeners.erase(std::remove(mouseListeners.begin(), mouseListeners.end(), listener), mouseListeners.end());
 }
 
-void WindowSystem::removeListener(WindowEventListener *listener)
+void WindowManager::removeListener(WindowEventListener *listener)
 {
     if (listener)
         windowEventListeners.erase(std::remove(windowEventListeners.begin(), windowEventListeners.end(), listener), windowEventListeners.end());
