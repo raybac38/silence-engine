@@ -1,13 +1,13 @@
 { pkgs ? import <nixpkgs> {} }:
 
+
+
 pkgs.mkShell {
   packages = with pkgs; [
     cmake
     ninja
     pkg-config
     git
-    tree
-    vscode
 
     alsa-lib
 
@@ -37,6 +37,8 @@ pkgs.mkShell {
 
     libGL
     libGLU
+
+    luajit
   ];
 
   shellHook = ''
@@ -44,6 +46,7 @@ pkgs.mkShell {
     pkgs.vulkan-loader
     pkgs.mesa
     pkgs.libGL
+    pkgs.luajit
   ]}:$LD_LIBRARY_PATH
 '';
 }

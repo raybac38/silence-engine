@@ -3,12 +3,12 @@
 
 #include <vector>
 #include <bx/math.h>
-#include "../utils/sparse_set.h"
+#include "../utils/sparse_set.tpp"
 
 class TransformSystem
 {
 public:
-    struct transformSystem
+    struct Transform
     {
         bx::Vec3 position;
         bx::Vec3 rotation;
@@ -17,13 +17,14 @@ public:
 
     TransformSystem();
 
-    size_t add();
+    void add(size_t index);
 
     void remove(size_t index);
 
+    TransformSystem::Transform& seek(size_t index);
+
 private:
-    SparseSet<struct transformSystem> tranformsSparseSet;
-    std::vector<size_t> entityToTransformIndex;
+    SparseSet<Transform> tranformsSparseSet;
 };
 
 #endif

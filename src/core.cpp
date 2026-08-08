@@ -1,6 +1,7 @@
 #include "core.h"
 #include "manager/window_manager.h"
 #include "system/render_system.h"
+#include "system/transform_system.h"
 #include <string>
 
 static const std::string windowTitle = "Silence";
@@ -21,6 +22,7 @@ void Core::run()
 
     window.addListener(this);
 
+    TransformSystem transform = TransformSystem();
     RenderSystem renderer = RenderSystem();
     if (!renderer.init(&window))
         exit(EXIT_FAILURE);
