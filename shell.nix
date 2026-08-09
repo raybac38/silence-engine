@@ -5,6 +5,8 @@
 pkgs.mkShell {
   packages = with pkgs; [
     cmake
+    gdb
+    valgrind
     ninja
     pkg-config
     git

@@ -14,6 +14,8 @@ namespace ScriptSystem
     void attachScript(size_t entityId, std::string path);
 
     void removeScript(size_t entityId);
+
+    std::string &getScriptName(size_t entityId);
 };
 
 extern "C"
@@ -21,4 +23,6 @@ extern "C"
     void script_system_attach_script(size_t entityId, const char *path);
 
     void script_system_remove_script(size_t entityId);
+
+    const char *script_system_get_script_name(size_t entityId);
 }

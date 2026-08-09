@@ -21,7 +21,7 @@ public:
 
     void remove(size_t index);
 
-    TransformSystem::Transform& seek(size_t index);
+    TransformSystem::Transform &seek(size_t index);
 
 private:
     SparseSet<Transform> tranformsSparseSet;

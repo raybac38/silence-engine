@@ -22,6 +22,8 @@ add_executable(mon_app
     ./src/system/transform_system.cpp
     ./src/system/render_system.cpp
 )
+# Force the compiler to output C symbole into the dynamic table
+set_target_properties(mon_app PROPERTIES ENABLE_EXPORTS TRUE)
 
 target_compile_options(mon_app PRIVATE
     -g

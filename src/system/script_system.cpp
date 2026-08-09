@@ -37,10 +37,12 @@ void ScriptSystem::attachScript(size_t entityId, std::string path)
     {
         ScriptSystem::Script newScript;
         newScript.path = path;
-
-        setUpLuaState(newScript.luaState, newScript.path);
-
         sparseSet.insert(entityId, std::move(newScript));
+
+        // Important, because callung setUpLuaState can use function call that require entityId to be present
+
+        ScriptSystem::Script &script = sparseSet.at(entityId);
+        setUpLuaState(script.luaState, script.path);
     }
 }
 
@@ -56,6 +58,18 @@ void ScriptSystem::removeScript(size_t entityId)
     }
 }
 
+std::string &ScriptSystem::getScriptName(size_t entityId)
+{
+    if (sparseSet.has(entityId))
+    {
+        return sparseSet.at(entityId).path;
+    }
+    else
+    {
+        throw std::runtime_error("Accessing script name that doesn't exist");
+    }
+}
+
 extern "C"
 {
     void script_system_attach_script(size_t entityId, const char *path)
@@ -66,5 +80,11 @@ extern "C"
     void script_system_remove_script(size_t entityId)
     {
         ScriptSystem::removeScript(entityId);
+    }
+
+    const char *script_system_get_script_name(size_t entityId)
+    {
+        std::string &name = ScriptSystem::getScriptName(entityId);
+        return name.c_str();
     }
 }
