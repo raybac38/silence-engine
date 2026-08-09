@@ -11,12 +11,11 @@ class SparseSet
 public:
     SparseSet(size_t initial_capacity = 1024)
     {
-        this->dense.reserve(initial_capacity);
         this->sparse.reserve(initial_capacity);
         this->denseToSparse.reserve(initial_capacity);
     }
 
-    void insert(size_t index, const T &value)
+    void insert(size_t index, T value)
     {
         if (index >= sparse.size())
         {
@@ -30,7 +29,7 @@ public:
         }
 
         sparse[index] = dense.size();
-        dense.push_back(value);
+        dense.push_back(std::move(value));
         denseToSparse.push_back(index);
     }
 
@@ -57,11 +56,11 @@ public:
 
         if (indexDenseASupprimer != dernierIndexDense)
         {
-            T dernierElement = dense[dernierIndexDense];
+            T dernierElement = std::move(dense[dernierIndexDense]);
             size_t idDernierElement = denseToSparse[dernierIndexDense];
 
             // Permutation
-            dense[indexDenseASupprimer] = dernierElement;
+            dense[indexDenseASupprimer] = std::move(dernierElement);
             denseToSparse[indexDenseASupprimer] = idDernierElement;
 
             // Update pointer

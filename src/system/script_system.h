@@ -1,4 +1,24 @@
-#ifndef SCRIPT_SYSTEM_H
-#define SCRIPT_SYSTEM_H
+#pragma once
 
-#endif
+#include <string>
+#include <sol/sol.hpp>
+
+namespace ScriptSystem
+{
+    struct Script
+    {
+        std::string path;
+        sol::state luaState;
+    };
+
+    void attachScript(size_t entityId, std::string path);
+
+    void removeScript(size_t entityId);
+};
+
+extern "C"
+{
+    void script_system_attach_script(size_t entityId, std::string path);
+
+    void script_system_remove_script(size_t entityId);
+}

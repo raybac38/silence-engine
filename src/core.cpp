@@ -2,6 +2,8 @@
 #include "manager/window_manager.h"
 #include "system/render_system.h"
 #include "system/transform_system.h"
+#include "manager/entity_manager.h"
+#include "system/script_system.h"
 #include <string>
 
 static const std::string windowTitle = "Silence";
@@ -42,6 +44,7 @@ void Core::onQuit()
 {
     this->quit = true;
 }
-void Core::onResize([[maybe_unused]] int width, [[maybe_unused]] int height)
+void Core::onResize(int width, int height)
 {
+    printf("NYP\n");
 }
