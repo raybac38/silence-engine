@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LUAJIT REQUIRED luajit)
+
 add_subdirectory(external/bgfx.cmake EXCLUDE_FROM_ALL SYSTEM)
 add_subdirectory(external/SDL EXCLUDE_FROM_ALL SYSTEM)
 add_subdirectory(external/sol2 EXCLUDE_FROM_ALL SYSTEM)
@@ -37,13 +40,18 @@ target_include_directories(mon_app SYSTEM PRIVATE
     ${bgfx_SOURCE_DIR}/include
     ${bimg_SOURCE_DIR}/include
     ${bx_SOURCE_DIR}/include
+    ${LUAJIT_INCLUDE_DIRS}
 )
+
+target_link_directories(mon_app PRIVATE ${LUAJIT_LIBRARY_DIRS})
+
 target_link_libraries(mon_app PRIVATE
     bgfx
     bimg
     bx
     SDL3::SDL3
     sol2::sol2
+    ${LUAJIT_LIBRARIES}
 )
 
 #############

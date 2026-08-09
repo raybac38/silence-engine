@@ -58,7 +58,7 @@ void ScriptSystem::removeScript(size_t entityId)
 
 extern "C"
 {
-    void script_system_attach_script(size_t entityId, std::string path)
+    void script_system_attach_script(size_t entityId, const char *path)
     {
         ScriptSystem::attachScript(entityId, path);
     }

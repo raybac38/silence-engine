@@ -26,6 +26,9 @@ void Core::run()
 
     TransformSystem transform = TransformSystem();
     RenderSystem renderer = RenderSystem();
+
+    init();
+
     if (!renderer.init(&window))
         exit(EXIT_FAILURE);
 
@@ -47,4 +50,10 @@ void Core::onQuit()
 void Core::onResize(int width, int height)
 {
     printf("NYP\n");
+}
+
+void Core::init()
+{
+    size_t id = EntityManager::allocateEntityId();
+    ScriptSystem::attachScript(id, "src/lua/main.lua");
 }

@@ -16,6 +16,8 @@ public:
 
 private:
     bool quit;
+
+    void init();
 };
 
 #endif
