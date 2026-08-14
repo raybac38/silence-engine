@@ -3,25 +3,62 @@
 #include "../config.h"
 #include "../utils/sparse_set.tpp"
 
-TransformSystem::TransformSystem()
+namespace
 {
-    this->tranformsSparseSet = SparseSet<Transform>();
+    SparseSet<TransformSystem::Transform> sparseSet;
 }
 
-void TransformSystem::add(size_t entityId)
+void TransformSystem::attachTransform(size_t index)
 {
-    bx::Vec3 default_position = {0.0f, 0.0f, 0.0f};
-    bx::Vec3 default_rotation = {0.0f, 0.0f, 0.0f};
-    bx::Vec3 default_scale = {1.0f, 1.0f, 1.0f};
+    if (sparseSet.has(index))
 
-    this->tranformsSparseSet.insert(entityId, {default_position, default_rotation, default_scale});
+        throw std::runtime_error("Transform system already attached");
+
+    TransformSystem::Transform default_transform;
+    default_transform.position = {0.0, 0.0, 0.0};
+    default_transform.rotation = {0.0, 0.0, 0.0};
+    default_transform.scale = {1.0, 1.0, 1.0};
+    sparseSet.insert(index, default_transform);
 }
 
-void TransformSystem::remove(size_t entityId)
+void TransformSystem::removeTransform(size_t index)
 {
-    this->tranformsSparseSet.delet(entityId);
+    if (sparseSet.has(index))
+    {
+        sparseSet.delet(index);
+    }
+    else
+    {
+        throw std::runtime_error("Transform not attached to this entity");
+    }
 }
 
-TransformSystem::Transform &TransformSystem::seek(size_t entityId){
-  return this->tranformsSparseSet.at(entityId);
+TransformSystem::Transform &TransformSystem::getTransform(size_t index)
+{
+    if (sparseSet.has(index))
+    {
+        return sparseSet.at(index);
+    }
+    else
+    {
+        throw std::runtime_error("Cannont acces, transform component not atteched");
+    }
+}
+
+extern "C"
+{
+    void transform_system_attach_transform(size_t index)
+    {
+        TransformSystem::attachTransform(index);
+    }
+
+    void transform_system_remove_transform(size_t index)
+    {
+        TransformSystem::removeTransform(index);
+    }
+
+    TransformSystem::Transform *transform_system_get_transform(size_t index)
+    {
+        return &TransformSystem::getTransform(index);
+    }
 }

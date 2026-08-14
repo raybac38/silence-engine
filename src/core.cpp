@@ -23,8 +23,6 @@ void Core::run()
         exit(EXIT_FAILURE);
 
     window.addListener(this);
-
-    TransformSystem transform = TransformSystem();
     RenderSystem renderer = RenderSystem();
 
     init();
@@ -39,6 +37,7 @@ void Core::run()
     while (!quit)
     {
         window.pollEvent();
+        ScriptSystem::update();
         renderer.render();
     }
 }

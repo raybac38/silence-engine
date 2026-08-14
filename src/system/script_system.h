@@ -16,6 +16,8 @@ namespace ScriptSystem
     void removeScript(size_t entityId);
 
     std::string &getScriptName(size_t entityId);
+
+    void update();
 };
 
 extern "C"

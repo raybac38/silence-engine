@@ -5,6 +5,7 @@
 namespace
 {
     SparseSet<ScriptSystem::Script> sparseSet;
+    std::vector<size_t> onUpdateList;
 
     void setUpLuaState(sol::state &luaState, const std::string &scriptPath)
     {
@@ -44,6 +45,8 @@ void ScriptSystem::attachScript(size_t entityId, std::string path)
         ScriptSystem::Script &script = sparseSet.at(entityId);
         setUpLuaState(script.luaState, script.path);
     }
+
+    onUpdateList.push_back(entityId);
 }
 
 void ScriptSystem::removeScript(size_t entityId)
@@ -67,6 +70,31 @@ std::string &ScriptSystem::getScriptName(size_t entityId)
     else
     {
         throw std::runtime_error("Accessing script name that doesn't exist");
+    }
+}
+
+void ScriptSystem::update()
+{
+    while (!onUpdateList.empty())
+    {
+        size_t id = onUpdateList.back();
+        onUpdateList.pop_back();
+        sol::protected_function onInit = sparseSet.at(id).luaState["_on_init"];
+        if (onInit.valid())
+        {
+            onInit(id);
+        }
+    }
+    if (sparseSet.size() > 0)
+    {
+        for (ScriptSystem::Script &script : sparseSet.data())
+        {
+            sol::protected_function onUpdate = script.luaState["_on_update"];
+            if (onUpdate.valid())
+            {
+                onUpdate();
+            }
+        }
     }
 }
 

@@ -79,7 +79,7 @@ public:
         return index < sparse.size() && sparse[index] != INVALID_INDEX;
     }
 
-    const std::vector<T> &data() const
+    std::vector<T> &data()
     {
         return this->dense;
     }
