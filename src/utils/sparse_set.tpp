@@ -1,5 +1,4 @@
-#ifndef SPARSE_SET_H
-#define SPARSE_SET_H
+#pragma once
 
 #include <vector>
 #include <iostream>
@@ -95,5 +94,3 @@ private:
     std::vector<size_t> denseToSparse; // Indispensable pour la suppression !
     std::vector<size_t> sparse;
 };
-
-#endif
