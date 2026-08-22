@@ -18,6 +18,18 @@ public:
     void onResize(int width, int height) override;
 
 private:
+    struct RenderComponent
+    {
+        size_t entity_id;
+        bgfx::VertexBufferHandle vbh; // Vertex Buffer
+        bgfx::IndexBufferHandle ibh;  // Index Buffer
+        bgfx::ProgramHandle program;  // Material
+    };
+
+    std::vector<RenderComponent> renderComponents;
+
+    int width,
+        height;
 };
 
 #endif

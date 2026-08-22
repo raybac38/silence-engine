@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
+#include <bx/math.h>
 #include <bgfx/platform.h>
 #include "../manager/window_manager.h"
 #include <iostream>
@@ -83,9 +84,23 @@ bool RenderSystem::init(WindowManager *windowManager)
 
 bool RenderSystem::render()
 {
+    bgfx::touch(0); // submit empty to the fram, that indirectly clear the window
 
-    bgfx::touch(0); // use view 0
-    bgfx::frame();  // send the frame
+    const bx::Vec3 at = {0.0f, 1.0f, 0.0f};
+    const bx::Vec3 eye = {0.0f, 1.0f, -2.5f};
+
+    {
+        float view[16];
+        bx::mtxLookAt(view, eye, at);
+
+        float proj[16];
+        bx::mtxProj(proj, 60.0f, static_cast<float>(width) / static_cast<float>(height),
+                    0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
+
+        bgfx::setViewTransform(0, view, proj);
+    }
+
+    bgfx::frame(); // send the frame
     return true;
 }
 
@@ -105,4 +120,7 @@ void RenderSystem::onResize(int width, int height)
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, width, height);
+
+    this->width = width;
+    this->height = height;
 }
