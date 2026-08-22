@@ -11,7 +11,7 @@ end
 
 
 function on_update()
-    transform = ffi.C.transform_system_get_transform(entityId)
-    transform.position.x = transform.position.x + 1
-    print(transform.position.x)
+    -- transform = ffi.C.transform_system_get_transform(entityId)
+    -- transform.position.x = transform.position.x + 1
+    -- print(transform.position.x)
 end
