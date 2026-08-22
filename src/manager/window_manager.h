@@ -7,9 +7,45 @@
 #include <vector>
 #include <optional>
 
-class WindowManager
+namespace WindowManager
 {
-public:
+    /**
+     * @brief Open a window
+     * @param title title of the window
+     * @param width width of the window
+     * @param height height of the window
+     */
+    bool open(const std::string &title, int width, int height);
+
+    /**
+     * @brief Close the window and free memory
+     */
+    void close();
+
+    /**
+     * @brief Is the window open
+     * @return does the is window openned
+     */
+    bool isOpen();
+
+    /**
+     *  Get window pointer
+     */
+
+    SDL_Window *getWindow();
+
+    /**
+     * @brief Get the current SDL properties
+     */
+    SDL_PropertiesID getProperties();
+
+    /**
+     * @brief Poll window event
+     */
+    void poolEvent();
+
+};
+{
     class KeyListener
     {
     public:
@@ -42,12 +78,12 @@ public:
 
     void pollEvent();
 
-    void addListener(KeyListener *listener);
-    void addListener(MouseListener *listener);
-    void addListener(WindowEventListener *listener);
-    void removeListener(KeyListener *listener);
-    void removeListener(MouseListener *listener);
-    void removeListener(WindowEventListener *listener);
+    void addListener(KeyListener * listener);
+    void addListener(MouseListener * listener);
+    void addListener(WindowEventListener * listener);
+    void removeListener(KeyListener * listener);
+    void removeListener(MouseListener * listener);
+    void removeListener(WindowEventListener * listener);
 
     int getWidth();
     int getHeight();

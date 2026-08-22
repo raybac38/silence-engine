@@ -40,6 +40,8 @@ pkgs.mkShell {
     libGL
     libGLU
 
+    doxygen
+
     luajit
   ];
 

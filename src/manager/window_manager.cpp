@@ -6,131 +6,94 @@
 #include <string>
 #include <algorithm>
 
-WindowManager::~WindowManager()
+namespace WindowManager
 {
-    if (this->window)
-        SDL_DestroyWindow(this->window);
-    SDL_Quit();
-}
-
-bool WindowManager::init(const std::string &title, int width, int height)
-{
-    this->width = width;
-    this->height = height;
-
-    if (!SDL_Init(SDL_INIT_VIDEO))
+    namespace
     {
-        std::cerr << "[ERROR] SDL_Init : " << SDL_GetError() << std::endl;
-        return false;
+        int window_width = 0;
+        int window_height = 0;
+        SDL_Window *window = nullptr;
     }
-    std::cout << "[INFO] SDL init" << std::endl;
 
-    this->window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE);
-
-    if (!this->window)
+    bool open(const std::string &title, int width, int height)
     {
-        std::cerr << "[ERROR] SDL_CreateWindow : " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return false;
-    }
-    std::cout << "[INFO] SDL create window" << std::endl;
-    return true;
-}
+        window_width = width;
+        window_height = height;
 
-bool WindowManager::isOpen()
-{
-    return this->window != nullptr;
-}
-
-SDL_Window *WindowManager::getWindow()
-{
-    return this->window;
-}
-
-SDL_PropertiesID WindowManager::getProperties()
-{
-    return SDL_GetWindowProperties(window);
-}
-
-int WindowManager::getHeight()
-{
-    return this->height;
-}
-
-int WindowManager::getWidth()
-{
-    return this->width;
-}
-
-void WindowManager::pollEvent()
-{
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
+        if (!SDL_Init(SDL_INIT_VIDEO))
         {
-        case SDL_EVENT_QUIT:
-            for (auto *listener : windowEventListeners)
-            {
-                listener->onQuit();
-            }
-            break;
-        case SDL_EVENT_WINDOW_RESIZED:
-            for (auto *listener : windowEventListeners)
-            {
-                listener->onResize(event.window.data1, event.window.data2);
-            }
-            break;
+            std::cerr << "[ERROR] SDL_Init : " << SDL_GetError() << std::endl;
+            return false;
+        }
+        std::cout << "[INFO] SDL init" << std::endl;
 
-        case SDL_EVENT_KEY_DOWN:
-            for (auto *listener : keyListeners)
-            {
-                listener->onKeyPressed(event.key.key);
-            }
-            break;
+        window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE);
 
-        case SDL_EVENT_MOUSE_MOTION:
-            for (auto *listener : mouseListeners)
+        if (!window)
+        {
+            std::cerr << "[ERROR] SDL_CreateWindow : " << SDL_GetError() << std::endl;
+            SDL_Quit();
+            return false;
+        }
+        std::cout << "[INFO] SDL create window" << std::endl;
+        return true;
+    }
+
+    void close()
+    {
+        if (isOpen())
+            SDL_DestroyWindow(window);
+        window = nullptr;
+        SDL_Quit();
+    }
+
+    bool isOpen()
+    {
+        return window != nullptr;
+    }
+
+    SDL_Window *getWindow()
+    {
+        return window;
+    }
+
+    SDL_PropertiesID getProperties()
+    {
+        return SDL_GetWindowProperties(window);
+    }
+
+    void poolEvent()
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
             {
-                listener->onMouseMove(event.motion.x, event.motion.y);
+            case SDL_EVENT_QUIT:
+                //
+                break;
+            case SDL_EVENT_WINDOW_RESIZED:
+                //
+                break;
+
+            case SDL_EVENT_KEY_DOWN:
+                //
+                break;
+
+            case SDL_EVENT_MOUSE_MOTION:
+                //
+                break;
             }
-            break;
         }
     }
-}
 
-void WindowManager::addListener(KeyListener *listener)
-{
-    if (listener)
-        this->keyListeners.push_back(listener);
-}
+    int getWidth()
+    {
+        return window_width;
+    }
 
-void WindowManager::addListener(MouseListener *listener)
-{
-    if (listener)
-        this->mouseListeners.push_back(listener);
-}
-
-void WindowManager::addListener(WindowEventListener *listener)
-{
-    if (listener)
-        this->windowEventListeners.push_back(listener);
-}
-
-void WindowManager::removeListener(KeyListener *listener)
-{
-    if (listener)
-        keyListeners.erase(std::remove(keyListeners.begin(), keyListeners.end(), listener), keyListeners.end());
-}
-
-void WindowManager::removeListener(MouseListener *listener)
-{
-    if (listener)
-        mouseListeners.erase(std::remove(mouseListeners.begin(), mouseListeners.end(), listener), mouseListeners.end());
-}
-
-void WindowManager::removeListener(WindowEventListener *listener)
-{
-    if (listener)
-        windowEventListeners.erase(std::remove(windowEventListeners.begin(), windowEventListeners.end(), listener), windowEventListeners.end());
-}
+    int getHeight()
+    {
+        return window_height;
+    }
+};
