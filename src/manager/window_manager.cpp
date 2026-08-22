@@ -1,5 +1,5 @@
 #include "window_manager.h"
-
+#include "../core.h"
 #include <SDL3/SDL.h>
 #include <cstdlib>
 #include <iostream>
@@ -62,7 +62,7 @@ namespace WindowManager
         return SDL_GetWindowProperties(window);
     }
 
-    void poolEvent()
+    void pollEvent()
     {
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -70,7 +70,7 @@ namespace WindowManager
             switch (event.type)
             {
             case SDL_EVENT_QUIT:
-                //
+                Core::shutdown();
                 break;
             case SDL_EVENT_WINDOW_RESIZED:
                 //

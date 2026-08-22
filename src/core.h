@@ -3,21 +3,20 @@
 
 #include "manager/window_manager.h"
 
-class Core : public WindowManager::WindowEventListener
+namespace Core
 {
-public:
-    Core();
-    void run();
-
-    // WindowEventListener
-
-    void onQuit() override;
-    void onResize(int width, int height) override;
-
-private:
-    bool quit;
-
+    /**
+    @breif Initialise the game
+    */
     void init();
+    /**
+     * @breif Run the gameloop
+     */
+    void run();
+    /**
+     * @brif Shutdown the gameloop
+     */
+    void shutdown();
 };
 
 #endif

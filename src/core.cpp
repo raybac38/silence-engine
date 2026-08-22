@@ -10,49 +10,43 @@ static const std::string windowTitle = "Silence";
 static const int windowDefaultHeight = 720;
 static const int windowDefaultWidth = 1280;
 
-Core::Core()
+namespace Core
 {
-    quit = false;
-}
-
-void Core::run()
-{
-    WindowManager window = WindowManager();
-
-    if (!window.init(windowTitle, windowDefaultWidth, windowDefaultHeight))
-        exit(EXIT_FAILURE);
-
-    window.addListener(this);
-    RenderSystem renderer = RenderSystem();
-
-    init();
-
-    if (!renderer.init(&window))
-        exit(EXIT_FAILURE);
-
-    /*
-        standard loop
-        input => gameplay => physic => render
-    */
-    while (!quit)
+    namespace
     {
-        window.pollEvent();
-        ScriptSystem::update();
-        renderer.render();
+        bool quit = false;
+    };
+
+    void run()
+    {
+        if (!WindowManager::open(windowTitle, windowDefaultWidth, windowDefaultHeight))
+            exit(EXIT_FAILURE);
+
+        if (!RenderSystem::init())
+            exit(EXIT_FAILURE);
+
+        init();
+
+        /*
+            standard loop
+            input => gameplay => physic => render
+        */
+        while (!quit)
+        {
+            WindowManager::pollEvent();
+            ScriptSystem::update();
+            RenderSystem::render();
+        }
     }
-}
 
-void Core::onQuit()
-{
-    this->quit = true;
-}
-void Core::onResize(int width, int height)
-{
-    printf("NYP\n");
-}
+    void init()
+    {
+        size_t id = EntityManager::allocateEntityId();
+        ScriptSystem::attachScript(id, "src/lua/main.lua");
+    }
 
-void Core::init()
-{
-    size_t id = EntityManager::allocateEntityId();
-    ScriptSystem::attachScript(id, "src/lua/main.lua");
+    void shutdown()
+    {
+        quit = true;
+    }
 }

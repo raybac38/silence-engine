@@ -1,35 +1,33 @@
-#ifndef RENDER_SYSTEM_H
-#define RENDER_SYSTEM_H
+#pragma once
 
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include "./../manager/window_manager.h"
 
-class RenderSystem : public WindowManager::WindowEventListener
+namespace RenderSystem
 {
-public:
-    bool init(WindowManager *windowSystem);
-    bool render();
-    bool shutdown();
 
-    // WindowEventListener
-    void onQuit() override;
-    void onResize(int width, int height) override;
+    /**
+     * @breif Init render system
+     * @return return true if success
+     */
+    bool init();
 
-private:
-    struct RenderComponent
-    {
-        size_t entity_id;
-        bgfx::VertexBufferHandle vbh; // Vertex Buffer
-        bgfx::IndexBufferHandle ibh;  // Index Buffer
-        bgfx::ProgramHandle program;  // Material
-    };
+    /**
+     * @brief Render the next frame
+     */
+    void render();
 
-    std::vector<RenderComponent> renderComponents;
+    /**
+     * @breif Shutdown render system
+     */
+    void shutdown();
 
-    int width,
-        height;
+    /**
+     * @breif Resize the view
+     * @param width width render size
+     * @param height height render size
+     */
+    void resize(int width, int height);
 };
-
-#endif
