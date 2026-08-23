@@ -25,7 +25,7 @@ namespace Core
         if (!RenderSystem::init())
             exit(EXIT_FAILURE);
 
-        init();
+        // init();
 
         /*
             standard loop

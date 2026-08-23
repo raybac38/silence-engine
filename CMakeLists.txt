@@ -21,6 +21,8 @@ add_executable(mon_app
     ./src/core.cpp
     ./src/system/transform_system.cpp
     ./src/system/render_system.cpp
+    ./src/utils/shader_loader.cpp
+    ./src/utils/geometry.cpp
 )
 # Force the compiler to output C symbole into the dynamic table
 set_target_properties(mon_app PROPERTIES ENABLE_EXPORTS TRUE)

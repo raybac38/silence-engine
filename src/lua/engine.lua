@@ -21,10 +21,26 @@ ffi.cdef[[
         Vec3 scale;
     } Transform;
 
+    // Geometry.h
+    typedef struct 
+    {
+        float x, y, z;
+        float nx, ny, nz;
+        float u, v;
+    } Vertex;
+
+    typedef struct Mesh Mesh;
+
+    Mesh geometry_load_file(const char *path);
+
     // transform system
     void transform_system_attach_transform(size_t index);
     void transform_system_remove_transform(size_t index);
     Transform *transform_system_get_transform(size_t index);
+
+    // render system
+    void render_system_attach_mesh(size_t entityId, Mesh *mesh);
+    void render_system_remove_mesh(size_t entityId);
 
 ]]
 

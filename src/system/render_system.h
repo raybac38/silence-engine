@@ -4,6 +4,7 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include "./../manager/window_manager.h"
+#include "../utils/geometry.h"
 
 namespace RenderSystem
 {
@@ -30,4 +31,15 @@ namespace RenderSystem
      * @param height height render size
      */
     void resize(int width, int height);
+
+    void attachMesh(size_t entityId, Geometry::Mesh *mesh);
+
+    void removeMesh(size_t entityId);
 };
+
+extern "C"
+{
+    void render_system_attach_mesh(size_t entityId, Geometry::Mesh *mesh);
+
+    void render_system_remove_mesh(size_t entityId);
+}

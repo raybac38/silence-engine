@@ -18,3 +18,8 @@ namespace Geometry
 
     Mesh loadFile(std::string path);
 }
+
+extern "C"
+{
+    Geometry::Mesh geometry_load_file(const char *path);
+}

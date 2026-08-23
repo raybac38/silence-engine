@@ -115,3 +115,14 @@ Geometry::Mesh Geometry::loadFile(std::string path)
 
     return {vertices};
 }
+
+extern "C"
+{
+    Geometry::Mesh geometry_load_file(const char *path)
+    {
+        std::string str_path = std::string(path);
+        Geometry::Mesh mesh = Geometry::loadFile(str_path);
+        printf("geometry charger avec %lu vertices\n", mesh.vertices.size());
+        return mesh;
+    }
+}

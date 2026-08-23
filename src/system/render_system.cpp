@@ -1,10 +1,12 @@
 #include "render_system.h"
+#include "../utils/shader_loader.h"
 
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
 #include <bgfx/platform.h>
 #include "../manager/window_manager.h"
+#include "../utils/sparse_set.tpp"
 #include <iostream>
 
 namespace RenderSystem
@@ -14,15 +16,20 @@ namespace RenderSystem
         struct RenderComponent
         {
             size_t entity_id;
-            bgfx::VertexBufferHandle vbh; // Vertex Buffer
-            bgfx::IndexBufferHandle ibh;  // Index Buffer
-            bgfx::ProgramHandle program;  // Material
+            bgfx::VertexBufferHandle vbh = BGFX_INVALID_HANDLE; // Vertex Buffer
+            bgfx::IndexBufferHandle ibh = BGFX_INVALID_HANDLE;
+            // Index Buffer
+            bgfx::ProgramHandle program = BGFX_INVALID_HANDLE;
+            // Material
         };
-
-        std::vector<RenderComponent> renderComponents;
 
         int render_width,
             render_height;
+
+        SparseSet<RenderComponent> sparseSet;
+
+        bgfx::VertexLayout vertexLayout;
+
     };
 
     bool init()
@@ -89,8 +96,11 @@ namespace RenderSystem
         init.type = bgfx::RendererType::Count;
         init.platformData = pd;
 
-        init.resolution.width = WindowManager::getWidth();
-        init.resolution.height = WindowManager::getHeight();
+        render_width = WindowManager::getWidth();
+        render_height = WindowManager::getHeight();
+
+        init.resolution.width = render_width;
+        init.resolution.height = render_height;
         init.resolution.reset = BGFX_RESET_VSYNC;
 
         if (!bgfx::init(init))
@@ -100,7 +110,14 @@ namespace RenderSystem
         }
 
         bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
-        bgfx::setViewRect(0, 0, 0, WindowManager::getWidth(), WindowManager::getHeight());
+        bgfx::setViewRect(0, 0, 0, render_width, render_height);
+
+        // This is the default vertex layout from utils/geometry.h
+        vertexLayout.begin()
+            .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+            .end();
 
         return true;
     }
@@ -123,6 +140,22 @@ namespace RenderSystem
             bgfx::setViewTransform(0, view, proj);
         }
 
+        uint64_t state = 0 | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
+
+        if (sparseSet.size() > 0)
+        {
+            std::vector<RenderComponent> &components = sparseSet.data();
+            for (RenderComponent &comp : components)
+            {
+                bgfx::setVertexBuffer(0, comp.vbh);
+                bgfx::setIndexBuffer(comp.ibh);
+
+                bgfx::setState(state);
+
+                bgfx::submit(0, comp.program);
+            }
+        }
+
         bgfx::frame(); // send the frame
     }
 
@@ -141,4 +174,62 @@ namespace RenderSystem
         render_height = height;
         render_width = width;
     }
+    void attachMesh(size_t entityId, Geometry::Mesh *mesh)
+    {
+        if (sparseSet.has(entityId))
+        {
+            removeMesh(entityId);
+        }
+        RenderComponent component;
+        component.entity_id = entityId;
+
+        // Temporary
+
+        bgfx::ShaderHandle vsh = ShaderLoader::loadShader("/home/ray/Projects/silence/silence-engine/shader/vs_default.sc");
+        bgfx::ShaderHandle fsh = ShaderLoader::loadShader("/home/ray/Projects/silence/silence-engine/shader/fs_default.sc");
+
+        component.program = bgfx::createProgram(vsh, fsh, true);
+
+        component.ibh = BGFX_INVALID_HANDLE;
+
+        if (!mesh->vertices.empty())
+        {
+            uint32_t dataSize = static_cast<uint32_t>(mesh->vertices.size() * sizeof(Geometry::Vertex));
+            const bgfx::Memory *mem = bgfx::copy(mesh->vertices.data(), dataSize);
+
+            component.vbh = bgfx::createVertexBuffer(mem, vertexLayout);
+        }
+
+        sparseSet.insert(entityId, component);
+    }
+    void removeMesh(size_t entityId)
+    {
+        RenderComponent &component = sparseSet.at(entityId);
+
+        if (bgfx::isValid(component.vbh))
+        {
+            bgfx::destroy(component.vbh);
+            component.vbh = BGFX_INVALID_HANDLE;
+        }
+
+        if (bgfx::isValid(component.ibh))
+        {
+            bgfx::destroy(component.ibh);
+            component.ibh = BGFX_INVALID_HANDLE;
+        }
+        sparseSet.delet(entityId);
+    }
 };
+
+extern "C"
+{
+    void render_system_attach_mesh(size_t entityId, Geometry::Mesh *mesh)
+    {
+        RenderSystem::attachMesh(entityId, mesh);
+    }
+
+    void render_system_remove_mesh(size_t entityId)
+    {
+        RenderSystem::removeMesh(entityId);
+    }
+}

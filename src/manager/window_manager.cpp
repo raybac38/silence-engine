@@ -1,5 +1,6 @@
 #include "window_manager.h"
 #include "../core.h"
+#include "../system/render_system.h"
 #include <SDL3/SDL.h>
 #include <cstdlib>
 #include <iostream>
@@ -73,7 +74,9 @@ namespace WindowManager
                 Core::shutdown();
                 break;
             case SDL_EVENT_WINDOW_RESIZED:
-                //
+                window_width = event.window.data1;
+                window_height = event.window.data2;
+                RenderSystem::resize(window_width, window_height);
                 break;
 
             case SDL_EVENT_KEY_DOWN:

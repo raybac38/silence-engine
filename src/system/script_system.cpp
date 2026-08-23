@@ -82,7 +82,13 @@ void ScriptSystem::update()
         sol::protected_function onInit = sparseSet.at(id).luaState["_on_init"];
         if (onInit.valid())
         {
-            onInit(id);
+            auto result = onInit(id);
+
+            if (!result.valid())
+            {
+                sol::error err = result;
+                std::cerr << " [Lua Error Init] ID " << id << " : " << err.what() << std::endl;
+            }
         }
     }
     if (sparseSet.size() > 0)
@@ -92,7 +98,13 @@ void ScriptSystem::update()
             sol::protected_function onUpdate = script.luaState["_on_update"];
             if (onUpdate.valid())
             {
-                onUpdate();
+                auto result = onUpdate();
+
+                if (!result.valid())
+                {
+                    sol::error err = result;
+                    std::cerr << " [Lua Error Update] : " << err.what() << std::endl;
+                }
             }
         }
     }
