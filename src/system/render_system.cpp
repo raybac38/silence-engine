@@ -6,7 +6,9 @@
 #include <bx/math.h>
 #include <bgfx/platform.h>
 #include "../manager/window_manager.h"
+#include "transform_system.h"
 #include "../utils/sparse_set.tpp"
+#include <chrono>
 #include <iostream>
 
 namespace RenderSystem
@@ -101,7 +103,7 @@ namespace RenderSystem
 
         init.resolution.width = render_width;
         init.resolution.height = render_height;
-        init.resolution.reset = BGFX_RESET_VSYNC;
+        init.resolution.reset = BGFX_RESET_VSYNC; // Put BGFX_RESET_NONE if want uncapped fps
 
         if (!bgfx::init(init))
         {
@@ -126,8 +128,8 @@ namespace RenderSystem
     {
         bgfx::touch(0); // submit empty to the fram, that indirectly clear the window
 
-        const bx::Vec3 at = {0.0f, 1.0f, 0.0f};
-        const bx::Vec3 eye = {0.0f, 1.0f, -2.5f};
+        const bx::Vec3 at = {0.0f, 0.0f, 0.0f};
+        const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
 
         {
             float view[16];
@@ -140,13 +142,29 @@ namespace RenderSystem
             bgfx::setViewTransform(0, view, proj);
         }
 
-        uint64_t state = 0 | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
+        uint64_t state = 0 | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CCW | BGFX_STATE_MSAA;
 
         if (sparseSet.size() > 0)
         {
             std::vector<RenderComponent> &components = sparseSet.data();
             for (RenderComponent &comp : components)
             {
+                // TODO : This can cause the game to crash if no transfom is available
+                TransformSystem::Transform &transform = TransformSystem::getTransform(comp.entity_id);
+
+                float rMtx[16];
+                bx::Quaternion quat = bx::fromEuler({transform.rotation.x, transform.rotation.y, transform.rotation.z});
+
+                bx::mtxFromQuaternion(rMtx, quat);
+
+                float tMtx[16];
+                bx::mtxTranslate(tMtx, transform.position.x, transform.position.y, transform.position.z);
+
+                float mtx[16];
+                bx::mtxMul(mtx, rMtx, tMtx);
+
+                bgfx::setTransform(mtx);
+
                 bgfx::setVertexBuffer(0, comp.vbh);
                 bgfx::setIndexBuffer(comp.ibh);
 

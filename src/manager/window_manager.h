@@ -52,4 +52,9 @@ namespace WindowManager
      * @brief heigth of the window
      */
     int getHeight();
+
+    /**
+     * @brief Set a new title to the window
+     */
+    void setTitle(std::string title);
 };

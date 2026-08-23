@@ -6,6 +6,9 @@
 #include "system/script_system.h"
 #include <string>
 
+#include <chrono>
+#include <iostream>
+
 static const std::string windowTitle = "Silence";
 static const int windowDefaultHeight = 720;
 static const int windowDefaultWidth = 1280;
@@ -27,12 +30,30 @@ namespace Core
 
         // init();
 
+        auto lastTime = std::chrono::high_resolution_clock::now();
+        int frameCount = 0;
+        float fps = 0.0f;
+
         /*
             standard loop
             input => gameplay => physic => render
         */
         while (!quit)
         {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            frameCount++;
+            std::chrono::duration<float> elapsedTime = currentTime - lastTime;
+
+            if (elapsedTime.count() >= 1.0f)
+            {
+                fps = static_cast<float>(frameCount) / elapsedTime.count();
+
+                WindowManager::setTitle(windowTitle + " | FPS: " + std::to_string(static_cast<int>(fps)));
+
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+
             WindowManager::pollEvent();
             ScriptSystem::update();
             RenderSystem::render();

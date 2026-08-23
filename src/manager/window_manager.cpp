@@ -36,6 +36,7 @@ namespace WindowManager
             SDL_Quit();
             return false;
         }
+        SDL_GL_SetSwapInterval(0);
         std::cout << "[INFO] SDL create window" << std::endl;
         return true;
     }
@@ -98,5 +99,9 @@ namespace WindowManager
     int getHeight()
     {
         return window_height;
+    }
+    void setTitle(std::string title)
+    {
+        SDL_SetWindowTitle(window, title.c_str());
     }
 };

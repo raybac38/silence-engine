@@ -86,18 +86,21 @@ Geometry::Mesh Geometry::loadFile(std::string path)
             Types::Vec3 p;
             ss >> p.x >> p.y >> p.z;
             rawPosition.push_back(p);
+            printf("new vertices : x:%f y:%f z:%f\n", p.x, p.y, p.z);
         }
         else if (prefix == "vt")
         {
             Types::Vec2 u;
             ss >> u.x >> u.y;
             rawUv.push_back(u);
+            printf("new uv : u:%f v:%f\n", u.x, u.y);
         }
         else if (prefix == "vn")
         {
             Types::Vec3 n;
             ss >> n.x >> n.y >> n.z;
             rawNormal.push_back(n);
+            printf("new normal : nx:%f ny:%f nz:%f\n", n.x, n.y, n.z);
         }
         else if (prefix == "f")
         {
@@ -116,6 +119,11 @@ Geometry::Mesh Geometry::loadFile(std::string path)
     return {vertices};
 }
 
+void Geometry::freeMesh(Geometry::Mesh *mesh)
+{
+    delete mesh;
+}
+
 extern "C"
 {
     Geometry::Mesh geometry_load_file(const char *path)
@@ -124,5 +132,9 @@ extern "C"
         Geometry::Mesh mesh = Geometry::loadFile(str_path);
         printf("geometry charger avec %lu vertices\n", mesh.vertices.size());
         return mesh;
+    }
+    void geometry_free_mesh(Geometry::Mesh mesh)
+    {
+        Geometry::freeMesh(&mesh);
     }
 }
