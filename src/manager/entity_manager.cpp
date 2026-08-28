@@ -1,4 +1,4 @@
-
+/**@file */
 #include "entity_manager.h"
 #include <optional>
 #include <vector>

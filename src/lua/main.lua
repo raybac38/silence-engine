@@ -23,5 +23,5 @@ function on_update()
     transform.position.x = math.sin(counter)
     transform.position.y = math.cos(counter)
     counter = counter + 0.1
-    print(transform.position.x)
+    --print(transform.position.x)
 end
