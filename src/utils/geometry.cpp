@@ -129,8 +129,8 @@ extern "C"
         Geometry::Mesh mesh = Geometry::loadFile(str_path);
         return mesh;
     }
-    void geometry_free_mesh(Geometry::Mesh mesh)
+    void geometry_free_mesh(Geometry::Mesh *mesh)
     {
-        Geometry::freeMesh(&mesh);
+        Geometry::freeMesh(mesh);
     }
 }

@@ -32,6 +32,7 @@ ffi.cdef[[
     typedef struct Mesh Mesh;
 
     Mesh geometry_load_file(const char *path);
+    void geometry_free_mesh(Mesh * mesh);
 
     // transform system
     void transform_system_attach_transform(size_t index);

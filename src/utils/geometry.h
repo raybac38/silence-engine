@@ -23,5 +23,5 @@ namespace Geometry
 extern "C"
 {
     Geometry::Mesh geometry_load_file(const char *path);
-    void geometry_free_mesh(Geometry::Mesh mesh);
+    void geometry_free_mesh(Geometry::Mesh *mesh);
 }
