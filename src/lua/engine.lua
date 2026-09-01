@@ -21,18 +21,16 @@ ffi.cdef[[
         Vec3 scale;
     } Transform;
 
-    // Geometry.h
-    typedef struct 
-    {
-        float x, y, z;
-        float nx, ny, nz;
-        float u, v;
-    } Vertex;
+    // Ressource manager
 
-    typedef struct Mesh Mesh;
+    typedef struct {
+        uint32_t index;
+        uint32_t generation;
+    } MeshHandle;
 
-    Mesh geometry_load_file(const char *path);
-    void geometry_free_mesh(Mesh * mesh);
+    MeshHandle ressource_manager_acquire_mesh(const char* path);
+    void ressource_manager_release_mesh(MeshHandle handle);
+
 
     // transform system
     void transform_system_attach_transform(size_t index);
@@ -40,7 +38,7 @@ ffi.cdef[[
     Transform *transform_system_get_transform(size_t index);
 
     // render system
-    void render_system_attach_mesh(size_t entityId, Mesh *mesh);
+    void render_system_attach_mesh(size_t entityId, MeshHandle handle);
     void render_system_remove_mesh(size_t entityId);
 
 ]]

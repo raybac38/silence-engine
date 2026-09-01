@@ -14,14 +14,7 @@ namespace Geometry
     struct Mesh
     {
         std::vector<Vertex> vertices;
+
+        explicit Mesh(const std::string &path);
     };
-
-    Mesh loadFile(std::string path);
-    void freeMesh(Mesh *mesh);
-}
-
-extern "C"
-{
-    Geometry::Mesh geometry_load_file(const char *path);
-    void geometry_free_mesh(Geometry::Mesh *mesh);
 }

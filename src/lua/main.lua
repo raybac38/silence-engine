@@ -9,9 +9,9 @@ function on_init()
     print("on init" .. entityId)
     ffi.C.transform_system_attach_transform(entityId)
     print("attach render system");
-    mesh = ffi.C.geometry_load_file("assets/obj/cube.obj")
+    meshHandle = ffi.C.ressource_manager_acquire_mesh("assets/obj/cube.obj")
     print("attach au render system")
-    ffi.C.render_system_attach_mesh(entityId, mesh)
+    ffi.C.render_system_attach_mesh(entityId, meshHandle)
     print("return")
 end
 

@@ -4,7 +4,7 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include "./../manager/window_manager.h"
-#include "../utils/geometry.h"
+#include "./../manager/ressource_manager.hpp"
 
 namespace RenderSystem
 {
@@ -32,14 +32,14 @@ namespace RenderSystem
      */
     void resize(int width, int height);
 
-    void attachMesh(size_t entityId, Geometry::Mesh *mesh);
+    void attachMesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle);
 
     void removeMesh(size_t entityId);
 };
 
 extern "C"
 {
-    void render_system_attach_mesh(size_t entityId, Geometry::Mesh *mesh);
+    void render_system_attach_mesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle);
 
     void render_system_remove_mesh(size_t entityId);
 }

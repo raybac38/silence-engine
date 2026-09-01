@@ -60,19 +60,18 @@ namespace
     }
 }
 
-Geometry::Mesh Geometry::loadFile(std::string path)
+Geometry::Mesh::Mesh(const std::string &path)
 {
     std::ifstream fichier(path);
     if (!fichier.is_open())
     {
         std::cerr << "[OBJ LOADER] Impossible d'ouvrir le fichier : " << path << std::endl;
-        return {};
+        return;
     }
 
     std::vector<Types::Vec3> rawPosition;
     std::vector<Types::Vec3> rawNormal;
     std::vector<Types::Vec2> rawUv;
-    std::vector<Geometry::Vertex> vertices;
 
     std::string ligne;
     while (std::getline(fichier, ligne))
@@ -113,24 +112,5 @@ Geometry::Mesh Geometry::loadFile(std::string path)
         }
     }
 
-    return {vertices};
-}
-
-void Geometry::freeMesh(Geometry::Mesh *mesh)
-{
-    delete mesh;
-}
-
-extern "C"
-{
-    Geometry::Mesh geometry_load_file(const char *path)
-    {
-        std::string str_path = std::string(path);
-        Geometry::Mesh mesh = Geometry::loadFile(str_path);
-        return mesh;
-    }
-    void geometry_free_mesh(Geometry::Mesh *mesh)
-    {
-        Geometry::freeMesh(mesh);
-    }
+    return;
 }

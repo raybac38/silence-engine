@@ -17,6 +17,7 @@ add_executable(mon_app
     ./src/main.cpp
     ./src/manager/window_manager.cpp
     ./src/manager/entity_manager.cpp
+    ./src/manager/ressource_manager.cpp
     ./src/system/script_system.cpp
     ./src/core.cpp
     ./src/system/transform_system.cpp

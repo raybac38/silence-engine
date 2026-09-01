@@ -192,7 +192,7 @@ namespace RenderSystem
         render_height = height;
         render_width = width;
     }
-    void attachMesh(size_t entityId, Geometry::Mesh *mesh)
+    void attachMesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle)
     {
         if (sparseSet.has(entityId))
         {
@@ -209,6 +209,8 @@ namespace RenderSystem
         component.program = bgfx::createProgram(vsh, fsh, true);
 
         component.ibh = BGFX_INVALID_HANDLE;
+
+        const Geometry::Mesh *mesh = RessourceManager::geometryManager.get(handle);
 
         if (!mesh->vertices.empty())
         {
@@ -241,9 +243,9 @@ namespace RenderSystem
 
 extern "C"
 {
-    void render_system_attach_mesh(size_t entityId, Geometry::Mesh *mesh)
+    void render_system_attach_mesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle)
     {
-        RenderSystem::attachMesh(entityId, mesh);
+        RenderSystem::attachMesh(entityId, handle);
     }
 
     void render_system_remove_mesh(size_t entityId)
