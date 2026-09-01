@@ -124,8 +124,10 @@ namespace RessourceManager
     inline Manager<Geometry::Mesh> geometryManager;
 }
 
+using MeshHandle = RessourceManager::Manager<Geometry::Mesh>::Handle;
+
 extern "C"
 {
-    RessourceManager::Manager<Geometry::Mesh>::Handle ressource_manager_acquire_mesh(const char *path);
-    void ressource_manager_release_mesh(RessourceManager::Manager<Geometry::Mesh>::Handle handle);
+    MeshHandle ressource_manager_acquire_mesh(const char *path);
+    void ressource_manager_release_mesh(MeshHandle meshHandle);
 }

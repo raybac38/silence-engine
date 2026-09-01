@@ -2,13 +2,13 @@
 
 extern "C"
 {
-    RessourceManager::Manager<Geometry::Mesh>::Handle ressource_manager_acquire_mesh(const char *path)
+    MeshHandle ressource_manager_acquire_mesh(const char *path)
     {
         return RessourceManager::geometryManager.acquire(path);
     }
 
-    void ressource_manager_release_mesh(RessourceManager::Manager<Geometry::Mesh>::Handle handle)
+    void ressource_manager_release_mesh(MeshHandle meshHandle)
     {
-        RessourceManager::geometryManager.release(handle);
+        RessourceManager::geometryManager.release(meshHandle);
     }
 }
