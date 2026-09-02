@@ -31,7 +31,6 @@ ffi.cdef[[
     MeshHandle ressource_manager_acquire_mesh(const char* path);
     void ressource_manager_release_mesh(MeshHandle handle);
 
-
     // transform system
     void transform_system_attach_transform(size_t index);
     void transform_system_remove_transform(size_t index);
@@ -41,7 +40,23 @@ ffi.cdef[[
     void render_system_attach_mesh(size_t entityId, MeshHandle handle);
     void render_system_remove_mesh(size_t entityId);
 
+    // Input System
+    bool input_is_held(int action_id);
+    bool input_is_pressed(int action_id);
+    bool input_is_released(int action_id);
+
 ]]
+-- Scancodes
+
+Keys = {
+    SPACE = 44,
+    W = 26,
+    Z = 122,
+    Q = 113,
+    A = 4,
+    S = 115,
+    D = 100
+}
 
 -- Callback from the engine
 entityId = nil
@@ -53,8 +68,8 @@ function _on_init(id)
     end
 end
 
-function _on_update()
+function _on_update(dt)
     if on_update and type(on_update) == "function" then
-        on_update()
+        on_update(dt)
     end
 end

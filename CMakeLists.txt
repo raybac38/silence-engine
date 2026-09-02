@@ -21,6 +21,7 @@ add_executable(mon_app
     ./src/system/script_system.cpp
     ./src/core.cpp
     ./src/system/transform_system.cpp
+    ./src/system/input_system.cpp
     ./src/system/render_system.cpp
     ./src/utils/shader_loader.cpp
     ./src/utils/geometry.cpp

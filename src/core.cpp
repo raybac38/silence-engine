@@ -3,6 +3,7 @@
 #include "system/render_system.h"
 #include "system/transform_system.h"
 #include "manager/entity_manager.h"
+#include "system/input_system.hpp"
 #include "system/script_system.h"
 #include <string>
 
@@ -38,9 +39,14 @@ namespace Core
             standard loop
             input => gameplay => physic => render
         */
+        auto lastFrameTime = std::chrono::high_resolution_clock::now();
+
         while (!quit)
         {
             auto currentTime = std::chrono::high_resolution_clock::now();
+            float dt = std::chrono::duration<float>(currentTime - lastFrameTime).count();
+            lastFrameTime = currentTime;
+
             frameCount++;
             std::chrono::duration<float> elapsedTime = currentTime - lastTime;
 
@@ -55,7 +61,9 @@ namespace Core
             }
 
             WindowManager::pollEvent();
-            ScriptSystem::update();
+            InputSystem::update();
+
+            ScriptSystem::update(dt);
             RenderSystem::render();
         }
     }

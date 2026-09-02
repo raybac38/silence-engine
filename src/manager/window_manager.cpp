@@ -1,6 +1,7 @@
 #include "window_manager.h"
 #include "../core.h"
 #include "../system/render_system.h"
+#include "../system/input_system.hpp"
 #include <SDL3/SDL.h>
 #include <cstdlib>
 #include <iostream>
@@ -69,6 +70,8 @@ namespace WindowManager
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
+            InputSystem::processEvent(event);
+
             switch (event.type)
             {
             case SDL_EVENT_QUIT:

@@ -15,13 +15,29 @@ function on_init()
     print("return")
 end
 
+x = 0
+y = 0
 
-
-function on_update()
+function on_update(dt)
     transform = ffi.C.transform_system_get_transform(entityId)
-    transform.rotation.x = transform.rotation.x + 0.1
-    transform.position.x = math.sin(counter)
-    transform.position.y = math.cos(counter)
-    counter = counter + 0.1
+
+    if ffi.C.input_is_held(Keys.Z) then
+        y = y + 1 * dt
+    end
+    if ffi.C.input_is_held(Keys.S) then
+        y = y - 1 * dt
+    end
+    if ffi.C.input_is_held(Keys.D) then
+        x = x + 1 * dt
+    end
+    if ffi.C.input_is_held(Keys.Q) then
+        x = x - 1 * dt
+    end
+
+    transform.position.x = x
+    transform.position.y = y
+
+    
+
     --print(transform.position.x)
 end

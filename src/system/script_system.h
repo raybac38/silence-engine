@@ -17,7 +17,7 @@ namespace ScriptSystem
 
     std::string &getScriptName(size_t entityId);
 
-    void update();
+    void update(float dt);
 };
 
 extern "C"

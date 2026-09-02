@@ -73,7 +73,7 @@ std::string &ScriptSystem::getScriptName(size_t entityId)
     }
 }
 
-void ScriptSystem::update()
+void ScriptSystem::update(float dt)
 {
     while (!onUpdateList.empty())
     {
@@ -98,7 +98,7 @@ void ScriptSystem::update()
             sol::protected_function onUpdate = script.luaState["_on_update"];
             if (onUpdate.valid())
             {
-                auto result = onUpdate();
+                auto result = onUpdate(dt);
 
                 if (!result.valid())
                 {
