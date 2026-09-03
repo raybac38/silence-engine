@@ -46,19 +46,20 @@ ffi.cdef[[
     bool input_is_released(int action_id);
 
 ]]
--- Scancodes
 
-Keys = {
-    SPACE = 44,
-    W = 26,
-    Z = 122,
-    Q = 113,
-    A = 4,
-    S = 115,
-    D = 100
+-- INPUT SYSTEM
+
+KeyCode = {
+    Space = 44, W = 26, Z = 122, Q = 113, A = 4, S = 115, D = 100
 }
 
--- Callback from the engine
+Input = {}
+function Input.GetKey(keycode) return ffi.C.input_is_held(keycode) end
+function Input.GetKeyDown(keycode) return ffi.C.input_is_pressed(keycode) end
+function Input.GetKeyUp(keycode) return ffi.C.input_is_released(keycode) end
+
+-- GAMEOBJECT
+
 entityId = nil
 
 function _on_init(id)
