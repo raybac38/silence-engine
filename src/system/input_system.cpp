@@ -16,12 +16,11 @@ namespace InputSystem
 
     void processEvent(const SDL_Event &event)
     {
-        printf("new event %d\n", event.key.key);
-        if (event.type == SDL_EVENT_KEY_DOWN)
+        if (event.type == SDL_EVENT_KEY_DOWN && event.key.key < MAX_KEYS)
         {
             raw_current_keys[event.key.key] = true;
         }
-        else if (event.type == SDL_EVENT_KEY_UP)
+        else if (event.type == SDL_EVENT_KEY_UP && event.key.key < MAX_KEYS)
         {
             raw_current_keys[event.key.key] = false;
         }
