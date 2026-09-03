@@ -47,7 +47,8 @@ namespace RenderSystem
         SDL_PropertiesID props = WindowManager::getProperties();
 
         const char *video_driver = SDL_GetCurrentVideoDriver();
-
+        
+        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland,x11");
         // Linux Wayland
         if (SDL_strcmp(video_driver, "wayland") == 0)
         {
