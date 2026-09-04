@@ -21,16 +21,16 @@ y = 0
 function on_update(dt)
     transform = ffi.C.transform_system_get_transform(entityId)
 
-    if ffi.C.input_is_held(Keys.Z) then
+    if ffi.C.input_is_held(KeyCode.Z) then
         y = y + 1 * dt
     end
-    if ffi.C.input_is_held(Keys.S) then
+    if ffi.C.input_is_held(KeyCode.S) then
         y = y - 1 * dt
     end
-    if ffi.C.input_is_held(Keys.D) then
+    if ffi.C.input_is_held(KeyCode.D) then
         x = x + 1 * dt
     end
-    if ffi.C.input_is_held(Keys.Q) then
+    if ffi.C.input_is_held(KeyCode.Q) then
         x = x - 1 * dt
     end
 
