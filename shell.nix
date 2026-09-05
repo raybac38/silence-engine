@@ -14,22 +14,22 @@ pkgs.mkShell {
     vulkan-headers
     vulkan-loader
 
-    xorg.libX11
-    xorg.libXext
-    xorg.libXrandr
-    xorg.libXcursor
-    xorg.libXi
-    xorg.libXinerama
-    xorg.libXfixes
-    xorg.libXScrnSaver
-    xorg.libXtst
+    libX11
+    libXext
+    libXrandr
+    libXcursor
+    libXi
+    libXinerama
+    libXfixes
+    libXScrnSaver
+    libXtst
 
-    xorg.libxcb
-    xorg.xcbutil
-    xorg.xcbutilwm
-    xorg.xcbutilimage
-    xorg.xcbutilkeysyms
-    xorg.xcbutilrenderutil
+    libxcb
+    xcbutil
+    xcbutilwm
+    xcbutilimage
+    xcbutilkeysyms
+    xcbutilrenderutil
 
     wayland
     wayland-protocols
