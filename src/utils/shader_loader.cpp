@@ -19,13 +19,11 @@ namespace ShaderLoader
         file.seekg(0, std::ios::beg);
 
         // Allocateur mémoire bgfx
-        const bgfx::Memory *mem = bgfx::alloc(static_cast<uint32_t>(size + 1));
+        const bgfx::Memory *mem = bgfx::alloc(static_cast<uint32_t>(size));
         file.read(reinterpret_cast<char *>(mem->data), size);
-        mem->data[mem->size - 1] = '\0'; // Caractère de fin de chaîne
+        file.close();
 
         bgfx::ShaderHandle handle = bgfx::createShader(mem);
-        bgfx::setName(handle, filePath);
-
         return handle;
     }
 }

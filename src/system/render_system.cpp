@@ -204,8 +204,8 @@ namespace RenderSystem
 
         // Temporary
 
-        bgfx::ShaderHandle vsh = ShaderLoader::loadShader("/home/ray/Projects/silence/silence-engine/shader/vs_default.sc");
-        bgfx::ShaderHandle fsh = ShaderLoader::loadShader("/home/ray/Projects/silence/silence-engine/shader/fs_default.sc");
+        bgfx::ShaderHandle vsh = ShaderLoader::loadShader("./shader/vs_default.bin");
+        bgfx::ShaderHandle fsh = ShaderLoader::loadShader("./shader/fs_default.bin");
 
         component.program = bgfx::createProgram(vsh, fsh, true);
 

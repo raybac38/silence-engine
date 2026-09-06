@@ -42,6 +42,8 @@ pkgs.mkShell {
     perf
 
     luajit
+
+    
   ];
 
   shellHook = ''
