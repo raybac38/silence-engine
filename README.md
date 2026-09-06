@@ -10,7 +10,7 @@ This project relies on the [Nix package manager](https://nixos.org/) to handle d
 
 Make sure `nix` is installed on your system before proceeding. 
 
-Run the setup script to initialize Git submodules and compile the `shaderc` tool (required for compiling BGFX shaders):
+Run the setup script to initialize Git submodules and compile the `shaderc` tool:
 
 ```bash
 sh ./scripts/dev_install.sh
