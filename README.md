@@ -13,25 +13,25 @@ Make sure `nix` is installed on your system before proceeding.
 Run the setup script to initialize Git submodules and compile the `shaderc` tool:
 
 ```bash
-sh ./scripts/dev_install.sh
+$ sh ./scripts/dev_install.sh
 ```
 
 ## Building
 Generate the build system:
 
 ```bash
-cmake -B build -G Ninja
+$ cmake -B build -G Ninja
 ```
 Compile the engine executable:
 ```bash
-cmake --build build
+$ cmake --build build
 ```
 
 ## Running
 Run the engine using the custom target:
 
 ```bash
-ninja -C build run
+$ ninja -C build run
 ```
 
 ## Generating Documentation
@@ -39,5 +39,5 @@ ninja -C build run
 You can generate the engine documentation using Doxygen via the provided script:
 
 ```bash
-sh ./scripts/generate_doc.sh
+$ sh ./scripts/generate_doc.sh
 ```
