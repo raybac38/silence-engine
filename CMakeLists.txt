@@ -11,7 +11,6 @@ if(CCACHE_PROGRAM)
     set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
 endif()
 
-# 2. Utiliser le linker ultra-rapide mold
 add_link_options("-fuse-ld=mold")
 
 #----------------------------
