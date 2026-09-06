@@ -1,5 +1,5 @@
 #include "../utils/sparse_set.tpp"
-#include "./script_system.h"
+#include "./script_system.hpp"
 
 namespace
 {

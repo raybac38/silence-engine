@@ -1,4 +1,4 @@
-#include "shader_loader.h"
+#include "shader_loader.hpp"
 #include "bgfx/bgfx.h"
 #include <fstream>
 #include <vector>

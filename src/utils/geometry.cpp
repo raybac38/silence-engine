@@ -1,5 +1,5 @@
-#include "geometry.h"
-#include "types.h"
+#include "geometry.hpp"
+#include "types.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>

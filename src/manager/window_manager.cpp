@@ -1,6 +1,6 @@
-#include "window_manager.h"
-#include "../core.h"
-#include "../system/render_system.h"
+#include "window_manager.hpp"
+#include "../core.hpp"
+#include "../system/render_system.hpp"
 #include "../system/input_system.hpp"
 #include <SDL3/SDL.h>
 #include <cstdlib>

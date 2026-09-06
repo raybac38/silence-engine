@@ -1,5 +1,5 @@
 /**@file */
-#include "entity_manager.h"
+#include "entity_manager.hpp"
 #include <optional>
 #include <vector>
 

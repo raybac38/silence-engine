@@ -1,6 +1,6 @@
-#include "transform_system.h"
+#include "transform_system.hpp"
 #include <bgfx/bgfx.h>
-#include "../config.h"
+#include "../config.hpp"
 #include "../utils/sparse_set.tpp"
 
 namespace

@@ -4,7 +4,7 @@
 #include <vector>
 #include <bx/math.h>
 #include "../utils/sparse_set.tpp"
-#include "../utils/types.h"
+#include "../utils/types.hpp"
 
 namespace TransformSystem
 {

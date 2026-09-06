@@ -1,12 +1,12 @@
-#include "render_system.h"
-#include "../utils/shader_loader.h"
+#include "render_system.hpp"
+#include "../utils/shader_loader.hpp"
 
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
 #include <bgfx/platform.h>
-#include "../manager/window_manager.h"
-#include "transform_system.h"
+#include "../manager/window_manager.hpp"
+#include "transform_system.hpp"
 #include "../utils/sparse_set.tpp"
 #include <chrono>
 #include <iostream>

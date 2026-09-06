@@ -1,7 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "manager/window_manager.h"
+#include "manager/window_manager.hpp"
 
 namespace Core
 {

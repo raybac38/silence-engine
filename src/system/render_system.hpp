@@ -3,7 +3,7 @@
 #include <SDL3/SDL.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
-#include "./../manager/window_manager.h"
+#include "./../manager/window_manager.hpp"
 #include "./../manager/ressource_manager.hpp"
 
 namespace RenderSystem

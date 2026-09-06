@@ -1,10 +1,10 @@
-#include "core.h"
-#include "manager/window_manager.h"
-#include "system/render_system.h"
-#include "system/transform_system.h"
-#include "manager/entity_manager.h"
+#include "core.hpp"
+#include "manager/window_manager.hpp"
+#include "system/render_system.hpp"
+#include "system/transform_system.hpp"
+#include "manager/entity_manager.hpp"
 #include "system/input_system.hpp"
-#include "system/script_system.h"
+#include "system/script_system.hpp"
 #include <string>
 
 #include <chrono>
