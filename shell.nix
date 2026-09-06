@@ -6,6 +6,9 @@ pkgs.mkShell {
     gdb
     valgrind
     ninja
+    clang
+    mold
+    ccache
     pkg-config
     git
 
