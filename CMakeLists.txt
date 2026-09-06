@@ -26,15 +26,46 @@ add_subdirectory(external/SDL EXCLUDE_FROM_ALL SYSTEM)
 add_subdirectory(external/sol2 EXCLUDE_FROM_ALL SYSTEM)
 
 # ------------------------------------------------------------------------------
+# ASSETS SYMBOLINK LINK
+# ------------------------------------------------------------------------------
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets/shaders")
+
+set(ASSET_FOLDERS "obj" "sound" "scripts")
+
+foreach(FOLDER ${ASSET_FOLDERS})
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/assets/${FOLDER}")
+        file(CREATE_LINK 
+            "${CMAKE_CURRENT_SOURCE_DIR}/assets/${FOLDER}" 
+            "${CMAKE_CURRENT_BINARY_DIR}/assets/${FOLDER}" 
+            SYMBOLIC
+        )
+    endif()
+endforeach()
+
+# ------------------------------------------------------------------------------
+# LUA API SETUP
+# ------------------------------------------------------------------------------
+
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/api")
+    file(CREATE_LINK 
+        "${CMAKE_CURRENT_SOURCE_DIR}/api" 
+        "${CMAKE_CURRENT_BINARY_DIR}/api" 
+        SYMBOLIC
+    )
+endif()
+
+# ------------------------------------------------------------------------------
 # SHADERC & SHANDERS
 # ------------------------------------------------------------------------------
 
 set(SHADERC_BIN "${CMAKE_CURRENT_SOURCE_DIR}/external/bgfx/tools/bin/linux/shaderc")
 
 function(compile_bgfx_shader SHADER_NAME SHADER_TYPE)
-    set(INPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/shader/${SHADER_NAME}.sc")
-    set(OUTPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/shader/${SHADER_NAME}.bin")
-    set(VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc")
+    set(INPUT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/${SHADER_NAME}.sc")
+    set(OUTPUT_FILE "${CMAKE_CURRENT_BINARY_DIR}/assets/shaders/${SHADER_NAME}.bin")
+    set(VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/varying.def.sc")
 
     add_custom_command(
         OUTPUT ${OUTPUT_FILE}
@@ -110,3 +141,15 @@ target_link_libraries(mon_app PRIVATE
 )
 
 add_dependencies(mon_app compile_shaders)
+
+# ------------------------------------------------------------------------------
+# Run application
+# ------------------------------------------------------------------------------
+
+add_custom_target(run
+    COMMAND mon_app
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    DEPENDS mon_app
+    USES_TERMINAL
+    COMMENT "Running mon_app..."
+)

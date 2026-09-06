@@ -204,8 +204,8 @@ namespace RenderSystem
 
         // Temporary
 
-        bgfx::ShaderHandle vsh = ShaderLoader::loadShader("./shader/vs_default.bin");
-        bgfx::ShaderHandle fsh = ShaderLoader::loadShader("./shader/fs_default.bin");
+        bgfx::ShaderHandle vsh = ShaderLoader::loadShader("./assets/shaders/vs_default.bin");
+        bgfx::ShaderHandle fsh = ShaderLoader::loadShader("./assets/shaders/fs_default.bin");
 
         component.program = bgfx::createProgram(vsh, fsh, true);
 

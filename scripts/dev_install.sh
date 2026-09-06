@@ -30,6 +30,7 @@ compile_shaderc(){
         return 1
     fi
 }
+
 check_nix_or_exit
 download_git_submodule
 compile_shaderc
