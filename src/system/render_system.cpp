@@ -25,6 +25,8 @@ namespace RenderSystem
             // Material
         };
 
+        size_t camera_id;
+
         int render_width,
             render_height;
 
@@ -47,7 +49,7 @@ namespace RenderSystem
         SDL_PropertiesID props = WindowManager::getProperties();
 
         const char *video_driver = SDL_GetCurrentVideoDriver();
-        
+
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland,x11");
         // Linux Wayland
         if (SDL_strcmp(video_driver, "wayland") == 0)
@@ -240,6 +242,10 @@ namespace RenderSystem
         }
         sparseSet.delet(entityId);
     }
+    void setCamera(size_t entityId)
+    {
+        camera_id = entityId;
+    }
 };
 
 extern "C"
@@ -252,5 +258,9 @@ extern "C"
     void render_system_remove_mesh(size_t entityId)
     {
         RenderSystem::removeMesh(entityId);
+    }
+    void render_system_set_camera(size_t entityId)
+    {
+        RenderSystem::setCamera(entityId);
     }
 }
