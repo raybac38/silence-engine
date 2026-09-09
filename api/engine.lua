@@ -1,10 +1,9 @@
 ffi = require("ffi")
 
 ffi.cdef[[
-
     // entity manager
-    uint64_t entity_manager_allocate_id(void);
-    void entity_manager_free_id(uint64_t entity_id);
+    size_t entity_manager_allocate_entity_id(void);
+    void entity_manager_free_id(size_t entity_id);
 
     // script system
     void script_system_attach_script(size_t entityId, const char* path);
@@ -45,6 +44,7 @@ ffi.cdef[[
     // render system
     void render_system_attach_mesh(size_t entityId, MeshHandle handle);
     void render_system_remove_mesh(size_t entityId);
+    void render_system_set_camera(size_t entityId);
 
     // Input System
     bool input_is_held(int action_id);

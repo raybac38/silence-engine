@@ -25,7 +25,7 @@ namespace RenderSystem
             // Material
         };
 
-        size_t camera_id;
+        std::optional<size_t> camera_id;
 
         int render_width,
             render_height;
@@ -131,10 +131,17 @@ namespace RenderSystem
     {
         bgfx::touch(0); // submit empty to the fram, that indirectly clear the window
 
-        const bx::Vec3 at = {0.0f, 0.0f, 0.0f};
-        const bx::Vec3 eye = {0.0f, 0.0f, -5.0f};
-
         {
+
+            TransformSystem::Transform cameraTransform = camera_id.has_value() ? TransformSystem::getTransform(camera_id.value()) : TransformSystem::Transform{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+            bx::Vec3 eye = {cameraTransform.position.x, cameraTransform.position.y, cameraTransform.position.z};
+
+            bx::Quaternion quat = bx::fromEuler({cameraTransform.rotation.x, cameraTransform.rotation.y, cameraTransform.rotation.z});
+            bx::Vec3 forward = bx::mul({0.0f, 0.0f, 1.0f}, quat);
+
+            bx::Vec3 at = bx::add(eye, forward);
+
             float view[16];
             bx::mtxLookAt(view, eye, at);
 
@@ -245,6 +252,7 @@ namespace RenderSystem
     void setCamera(size_t entityId)
     {
         camera_id = entityId;
+        printf("entity id set");
     }
 };
 

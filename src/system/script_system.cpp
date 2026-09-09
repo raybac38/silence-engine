@@ -9,7 +9,6 @@ namespace
     void setUpLuaState(sol::state &luaState, const std::string &scriptPath)
     {
         luaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::table, sol::lib::ffi);
-
         if (!scriptPath.empty())
         {
             luaState.script_file(scriptPath);

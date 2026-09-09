@@ -11,7 +11,7 @@ if(CCACHE_PROGRAM)
     set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
 endif()
 
-add_link_options("-fuse-ld=mold")
+#add_link_options("-fuse-ld=mold")
 
 #----------------------------
 #   Submodule dependencies
@@ -95,12 +95,12 @@ add_executable(mon_app ${SOURCES})
 set_target_properties(mon_app PROPERTIES ENABLE_EXPORTS TRUE)
 
 target_compile_options(mon_app PRIVATE
-    -g
+    
     -Wall
     -Wpedantic
     -Werror
     -fsanitize=address,undefined
-    -Og
+    -Og -g
 )
 
 target_link_options(mon_app PRIVATE
