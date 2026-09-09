@@ -48,11 +48,8 @@ endforeach()
 
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/api")
-    file(CREATE_LINK 
-        "${CMAKE_CURRENT_SOURCE_DIR}/api" 
-        "${CMAKE_CURRENT_BINARY_DIR}/api" 
-        SYMBOLIC
-    )
+    file(REMOVE "${CMAKE_CURRENT_BINARY_DIR}/api")
+    file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/api" "${CMAKE_CURRENT_BINARY_DIR}/api" SYMBOLIC)
 endif()
 
 # ------------------------------------------------------------------------------
@@ -92,19 +89,8 @@ add_custom_target(compile_shaders DEPENDS ${COMPILED_SHADERS})
 # Main application
 # ------------------------------------------------------------------------------
 
-add_executable(mon_app
-    ./src/main.cpp
-    ./src/manager/window_manager.cpp
-    ./src/manager/entity_manager.cpp
-    ./src/manager/ressource_manager.cpp
-    ./src/system/script_system.cpp
-    ./src/core.cpp
-    ./src/system/transform_system.cpp
-    ./src/system/input_system.cpp
-    ./src/system/render_system.cpp
-    ./src/utils/shader_loader.cpp
-    ./src/utils/geometry.cpp
-)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp" "src/*.hpp")
+add_executable(mon_app ${SOURCES})
 
 set_target_properties(mon_app PROPERTIES ENABLE_EXPORTS TRUE)
 

@@ -34,7 +34,13 @@ ffi.cdef[[
     // transform system
     void transform_system_attach_transform(size_t index);
     void transform_system_remove_transform(size_t index);
-    Transform *transform_system_get_transform(size_t index);
+    
+    void transfrom_system_set_position(size_t index, Vec3 position);
+    void transfrom_system_translate(size_t index, Vec3 vector);
+    void transfrom_system_set_rotation(size_t index, Vec3 rotation);
+    void transfrom_system_rotate(size_t index, Vec3 vector);
+    void transfrom_system_set_scale(size_t index, Vec3 scale);
+    void transfrom_system_scale(size_t index, Vec3 vector);
 
     // render system
     void render_system_attach_mesh(size_t entityId, MeshHandle handle);

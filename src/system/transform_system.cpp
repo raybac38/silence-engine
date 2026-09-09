@@ -2,11 +2,26 @@
 #include <bgfx/bgfx.h>
 #include "../config.hpp"
 #include "../utils/sparse_set.tpp"
+#include "../utils/rotation.hpp"
 
 namespace
 {
     SparseSet<TransformSystem::Transform> sparseSet;
+
+    
 }
+
+TransformSystem::Transform &TransformSystem::getTransform(size_t index)
+    {
+        if (sparseSet.has(index))
+        {
+            return sparseSet.at(index);
+        }
+        else
+        {
+            throw std::runtime_error("Cannont acces, transform component not atteched");
+        }
+    }
 
 void TransformSystem::attachTransform(size_t index)
 {
@@ -33,16 +48,46 @@ void TransformSystem::removeTransform(size_t index)
     }
 }
 
-TransformSystem::Transform &TransformSystem::getTransform(size_t index)
+void TransformSystem::setPosition(size_t index, Types::Vec3 position)
 {
-    if (sparseSet.has(index))
-    {
-        return sparseSet.at(index);
-    }
-    else
-    {
-        throw std::runtime_error("Cannont acces, transform component not atteched");
-    }
+    Transform &current = getTransform(index);
+    current.position = position;
+}
+
+void TransformSystem::translate(size_t index, Types::Vec3 vector)
+{
+    Transform &current = getTransform(index);
+    current.position.x += vector.x;
+    current.position.y += vector.y;
+    current.position.z += vector.z;
+}
+
+void TransformSystem::setRotation(size_t index, Types::Vec3 rotation)
+{
+    Transform &current = getTransform(index);
+    current.rotation = rotation;
+}
+
+void TransformSystem::rotate(size_t index, Types::Vec3 vector)
+{
+    Transform &current = getTransform(index);
+    Types::Vec4 currentRotation = Math::eulerToQuaternion(current.rotation);
+    Types::Vec4 rotationVector = Math::eulerToQuaternion(vector);
+    current.rotation = Math::quaternionToEuler(Math::combineRotations(currentRotation, rotationVector));
+}
+
+void TransformSystem::setScale(size_t index, Types::Vec3 scale)
+{
+    Transform &current = getTransform(index);
+    current.scale = scale;
+}
+
+void TransformSystem::scale(size_t index, Types::Vec3 vector)
+{
+    Transform &current = getTransform(index);
+    current.scale.x += vector.x;
+    current.scale.y += vector.y;
+    current.scale.z += vector.z;
 }
 
 extern "C"
@@ -57,8 +102,33 @@ extern "C"
         TransformSystem::removeTransform(index);
     }
 
-    TransformSystem::Transform *transform_system_get_transform(size_t index)
+    void transfrom_system_set_position(size_t index, Vec3 position)
     {
-        return &TransformSystem::getTransform(index);
+        TransformSystem::setPosition(index, position);
+    }
+
+    void transfrom_system_translate(size_t index, Vec3 vector)
+    {
+        TransformSystem::translate(index, vector);
+    }
+
+    void transfrom_system_set_rotation(size_t index, Vec3 rotation)
+    {
+        TransformSystem::setRotation(index, rotation);
+    }
+
+    void transfrom_system_rotate(size_t index, Vec3 vector)
+    {
+        TransformSystem::rotate(index, vector);
+    }
+
+    void transfrom_system_set_scale(size_t index, Vec3 scale)
+    {
+        TransformSystem::setScale(index, scale);
+    }
+
+    void transfrom_system_scale(size_t index, Vec3 vector)
+    {
+        TransformSystem::scale(index, vector);
     }
 }
