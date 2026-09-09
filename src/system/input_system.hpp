@@ -1,4 +1,5 @@
 #pragma once
+#include "../utils/types.hpp"
 #include <SDL3/SDL.h>
 
 namespace InputSystem
@@ -29,4 +30,7 @@ extern "C"
     bool input_is_held(int action_id);
     bool input_is_pressed(int action_id);
     bool input_is_released(int action_id);
+    Types::Vec2 input_get_mouse_position();
+    Types::Vec2 input_get_mouse_delta();
+    Types::Vec2 input_get_mouse_scroll();
 }

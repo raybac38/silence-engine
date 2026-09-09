@@ -15,6 +15,10 @@ ffi.cdef[[
     } Vec3;
 
     typedef struct {
+        float x, y;
+    } Vec2;
+
+    typedef struct {
         Vec3 position;
         Vec3 rotation;
         Vec3 scale;
@@ -50,6 +54,9 @@ ffi.cdef[[
     bool input_is_held(int action_id);
     bool input_is_pressed(int action_id);
     bool input_is_released(int action_id);
+    Vec2 input_get_mouse_position();
+    Vec2 input_get_mouse_delta();
+    Vec2 input_get_mouse_scroll();
 
 ]]
 
@@ -63,6 +70,9 @@ Input = {}
 function Input.GetKey(keycode) return ffi.C.input_is_held(keycode) end
 function Input.GetKeyDown(keycode) return ffi.C.input_is_pressed(keycode) end
 function Input.GetKeyUp(keycode) return ffi.C.input_is_released(keycode) end
+function Input.GetMousePosition() return ffi.C.input_get_mouse_position() end
+function Input.GetMouseDelta() return ffi.C.input_get_mouse_delta() end
+function Input.GetMouseScroll() return ffi.C.input_get_mouse_scroll() end
 
 -- GAMEOBJECT
 
