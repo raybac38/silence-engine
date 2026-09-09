@@ -94,24 +94,30 @@ namespace Math
         Types::Vec3 euler;
         constexpr float HALF_PI = std::numbers::pi_v<float> / 2.0f;
 
+        Types::Vec4 qn = normalizeQuat(q);
 
-        const float sinPitch = 2.0f * (q.w * q.x - q.y * q.z);
+        const float sinPitch = 2.0f * (qn.w * qn.x - qn.y * qn.z);
 
-        if (std::abs(sinPitch) >= 1.0f)
+        if (sinPitch >= 0.99999f)
         {
-            euler.x = std::copysign(HALF_PI, sinPitch);
-            euler.y = 2.0f * std::atan2(q.y, q.w);
+            euler.x = HALF_PI;
+            euler.y = 2.0f * std::atan2(qn.y, qn.w);
+            euler.z = 0.0f;
+        }
+        else if (sinPitch <= -0.99999f)
+        {
+            euler.x = -HALF_PI;
+            euler.y = 2.0f * std::atan2(qn.y, qn.w);
             euler.z = 0.0f;
         }
         else
         {
             euler.x = std::asin(sinPitch);
-            euler.y = std::atan2(2.0f * (q.w * q.y + q.x * q.z), 1.0f - 2.0f * (q.x * q.x + q.y * q.y));
-            euler.z = std::atan2(2.0f * (q.w * q.z + q.x * q.y), 1.0f - 2.0f * (q.x * q.x + q.z * q.z));
+            euler.y = std::atan2(2.0f * (qn.w * qn.y + qn.x * qn.z), 1.0f - 2.0f * (qn.x * qn.x + qn.y * qn.y));
+            euler.z = std::atan2(2.0f * (qn.w * qn.z + qn.x * qn.y), 1.0f - 2.0f * (qn.x * qn.x + qn.z * qn.z));
         }
 
         return euler;
     }
 
 }
-

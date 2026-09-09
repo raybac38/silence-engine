@@ -73,7 +73,9 @@ void TransformSystem::rotate(size_t index, Types::Vec3 vector)
     Transform &current = getTransform(index);
     Types::Vec4 currentRotation = Math::eulerToQuaternion(current.rotation);
     Types::Vec4 rotationVector = Math::eulerToQuaternion(vector);
-    current.rotation = Math::quaternionToEuler(Math::combineRotations(currentRotation, rotationVector));
+    Types::Vec4 combined = Math::combineRotations(currentRotation, rotationVector);
+    combined = Math::normalizeQuat(combined);
+    current.rotation = Math::quaternionToEuler(combined);
 }
 
 void TransformSystem::setScale(size_t index, Types::Vec3 scale)
