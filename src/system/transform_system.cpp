@@ -8,20 +8,19 @@ namespace
 {
     SparseSet<TransformSystem::Transform> sparseSet;
 
-    
 }
 
 TransformSystem::Transform &TransformSystem::getTransform(size_t index)
+{
+    if (sparseSet.has(index))
     {
-        if (sparseSet.has(index))
-        {
-            return sparseSet.at(index);
-        }
-        else
-        {
-            throw std::runtime_error("Cannont acces, transform component not atteched");
-        }
+        return sparseSet.at(index);
     }
+    else
+    {
+        throw std::runtime_error("Cannont acces, transform component not atteched");
+    }
+}
 
 void TransformSystem::attachTransform(size_t index)
 {
@@ -31,7 +30,7 @@ void TransformSystem::attachTransform(size_t index)
 
     TransformSystem::Transform default_transform;
     default_transform.position = {0.0, 0.0, 0.0};
-    default_transform.rotation = {0.0, 0.0, 0.0};
+    default_transform.rotation = Math::eulerToQuaternion({0.0, 0.0, 0.0});
     default_transform.scale = {1.0, 1.0, 1.0};
     sparseSet.insert(index, default_transform);
 }
@@ -65,17 +64,15 @@ void TransformSystem::translate(size_t index, Types::Vec3 vector)
 void TransformSystem::setRotation(size_t index, Types::Vec3 rotation)
 {
     Transform &current = getTransform(index);
-    current.rotation = rotation;
+    current.rotation = Math::eulerToQuaternion(rotation);
 }
 
 void TransformSystem::rotate(size_t index, Types::Vec3 vector)
 {
     Transform &current = getTransform(index);
-    Types::Vec4 currentRotation = Math::eulerToQuaternion(current.rotation);
     Types::Vec4 rotationVector = Math::eulerToQuaternion(vector);
-    Types::Vec4 combined = Math::combineRotations(currentRotation, rotationVector);
-    combined = Math::normalizeQuat(combined);
-    current.rotation = Math::quaternionToEuler(combined);
+    Types::Vec4 combined = Math::combineRotations(current.rotation, rotationVector);
+    current.rotation = Math::normalizeQuat(combined);
 }
 
 void TransformSystem::setScale(size_t index, Types::Vec3 scale)

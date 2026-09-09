@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_SYSTEM_H
-#define TRANSFORM_SYSTEM_H
+#pragma once
 
 #include <vector>
 #include <bx/math.h>
@@ -11,7 +10,7 @@ namespace TransformSystem
     struct Transform
     {
         Types::Vec3 position;
-        Types::Vec3 rotation;
+        Types::Vec4 rotation;
         Types::Vec3 scale;
     };
 
@@ -56,5 +55,3 @@ extern "C"
     void transfrom_system_scale(size_t index, Vec3 vector);
 
 }
-
-#endif

@@ -137,7 +137,7 @@ namespace RenderSystem
 
             bx::Vec3 eye = {cameraTransform.position.x, cameraTransform.position.y, cameraTransform.position.z};
 
-            bx::Quaternion quat = bx::fromEuler({cameraTransform.rotation.x, cameraTransform.rotation.y, cameraTransform.rotation.z});
+            bx::Quaternion quat = {cameraTransform.rotation.x, cameraTransform.rotation.y, cameraTransform.rotation.z, cameraTransform.rotation.w};
             bx::Vec3 forward = bx::mul({0.0f, 0.0f, 1.0f}, quat);
 
             bx::Vec3 at = bx::add(eye, forward);
@@ -163,7 +163,7 @@ namespace RenderSystem
                 TransformSystem::Transform &transform = TransformSystem::getTransform(comp.entity_id);
 
                 float rMtx[16];
-                bx::Quaternion quat = bx::fromEuler({transform.rotation.x, transform.rotation.y, transform.rotation.z});
+                bx::Quaternion quat = {transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w};
 
                 bx::mtxFromQuaternion(rMtx, quat);
 
