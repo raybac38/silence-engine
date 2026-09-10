@@ -42,7 +42,7 @@ pkgs.mkShell {
     libGLU
 
     doxygen
-    perf
+    
 
     luajit
 

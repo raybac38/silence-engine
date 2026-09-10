@@ -76,7 +76,7 @@ void ScriptSystem::update(float dt)
     {
         size_t id = onUpdateList.back();
         onUpdateList.pop_back();
-        sol::protected_function onInit = sparseSet.at(id).luaState["_on_init"];
+        sol::protected_function onInit = sparseSet.at(id).luaState["_OnInit"];
         if (onInit.valid())
         {
             auto result = onInit(id);
@@ -92,7 +92,7 @@ void ScriptSystem::update(float dt)
     {
         for (ScriptSystem::Script &script : sparseSet.data())
         {
-            sol::protected_function onUpdate = script.luaState["_on_update"];
+            sol::protected_function onUpdate = script.luaState["_OnUpdate"];
             if (onUpdate.valid())
             {
                 auto result = onUpdate(dt);

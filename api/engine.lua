@@ -149,19 +149,19 @@ function Input.GetMouseDelta() return ffi.C.input_get_mouse_delta() end
 
 function Input.GetMouseScroll() return ffi.C.input_get_mouse_scroll() end
 
--- GAMEOBJECT
+-- ENTITY
 
-entityId = nil
+Entity = {}
 
-function _on_init(id)
-    entityId = id
-    if on_init and type(on_init) == "function" then
-        on_init()
-    end
+function OnInit() end
+
+function OnUpdate(dt) end
+
+function _OnInit(id)
+    Entity.id = id;
+    OnInit()
 end
 
-function _on_update(dt)
-    if on_update and type(on_update) == "function" then
-        on_update(dt)
-    end
+function _OnUpdate(dt)
+    OnUpdate(dt)
 end
