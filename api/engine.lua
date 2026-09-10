@@ -60,6 +60,20 @@ ffi.cdef [[
 
 ]]
 
+-- UTILS
+
+function Vec3(x, y, z, w)
+    return ffi.new("Vec4", x, y, z, w)
+end
+
+function Vec3(x, y, z)
+    return ffi.new("Vec3", x, y, z)
+end
+
+function Vec2(x, y)
+    return ffi.new("Vec2", x, y)
+end
+
 -- ENTITY MANAGER
 
 EntityManager = {}
