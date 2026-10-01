@@ -5,6 +5,7 @@
 #include <bgfx/platform.h>
 #include "./../manager/window_manager.hpp"
 #include "./../manager/ressource_manager.hpp"
+#include "./../manager/entity_manager.hpp"
 
 namespace RenderSystem
 {
@@ -32,18 +33,18 @@ namespace RenderSystem
      */
     void resize(int width, int height);
 
-    void attachMesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle);
+    void attachMesh(EntityManager::EntityId entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle);
 
-    void removeMesh(size_t entityId);
+    void removeMesh(EntityManager::EntityId entityId);
 
-    void setCamera(size_t entityId);
+    void setCamera(EntityManager::EntityId entityId);
 };
 
 extern "C"
 {
-    void render_system_attach_mesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle);
+    void render_system_attach_mesh(EntityManager::EntityId entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle);
 
-    void render_system_remove_mesh(size_t entityId);
+    void render_system_remove_mesh(EntityManager::EntityId entityId);
 
-    void render_system_set_camera(size_t entityId);
+    void render_system_set_camera(EntityManager::EntityId entityId);
 }

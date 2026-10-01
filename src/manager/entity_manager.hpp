@@ -1,23 +1,29 @@
 #pragma once
 #include <cstddef>
+#include <stdint.h>
 
 namespace EntityManager
 {
+  struct EntityId
+  {
+    uint32_t generation;
+    uint32_t id;
+  };
 
   /*
    * Allocate a new ID to declare a new entity
    */
-  size_t allocateEntityId();
+  EntityId allocateEntityId();
 
   /*
    * Free a entity Id to be reused
    */
-  void freeEntityId(size_t entityId);
+  void freeEntityId(EntityId entityId);
 }
 
 extern "C"
 {
-  size_t entity_manager_allocate_entity_id();
+  EntityManager::EntityId tity_manager_allocate_entity_id();
 
-  void entity_manager_free_entity_id(size_t entityId);
+  void entity_manager_free_entity_id(EntityManager::EntityId entityId);
 }

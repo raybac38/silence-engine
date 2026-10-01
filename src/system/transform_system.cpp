@@ -7,14 +7,14 @@
 namespace
 {
     SparseSet<TransformSystem::Transform> sparseSet;
-
 }
 
-TransformSystem::Transform &TransformSystem::getTransform(size_t index)
+TransformSystem::Transform &TransformSystem::getTransform(EntityManager::EntityId entityId)
 {
-    if (sparseSet.has(index))
+    uint32_t id = entityId.id;
+    if (sparseSet.has(id))
     {
-        return sparseSet.at(index);
+        return sparseSet.at(id);
     }
     else
     {
@@ -22,9 +22,10 @@ TransformSystem::Transform &TransformSystem::getTransform(size_t index)
     }
 }
 
-void TransformSystem::attachTransform(size_t index)
+void TransformSystem::attachTransform(EntityManager::EntityId entityId)
 {
-    if (sparseSet.has(index))
+    uint32_t id = entityId.id;
+    if (sparseSet.has(id))
 
         throw std::runtime_error("Transform system already attached");
 
@@ -32,14 +33,15 @@ void TransformSystem::attachTransform(size_t index)
     default_transform.position = {0.0, 0.0, 0.0};
     default_transform.rotation = Math::eulerToQuaternion({0.0, 0.0, 0.0});
     default_transform.scale = {1.0, 1.0, 1.0};
-    sparseSet.insert(index, default_transform);
+    sparseSet.insert(id, default_transform);
 }
 
-void TransformSystem::removeTransform(size_t index)
+void TransformSystem::removeTransform(EntityManager::EntityId entityId)
 {
-    if (sparseSet.has(index))
+    uint32_t id = entityId.id;
+    if (sparseSet.has(id))
     {
-        sparseSet.delet(index);
+        sparseSet.delet(id);
     }
     else
     {
@@ -47,43 +49,43 @@ void TransformSystem::removeTransform(size_t index)
     }
 }
 
-void TransformSystem::setPosition(size_t index, Types::Vec3 position)
+void TransformSystem::setPosition(EntityManager::EntityId entityId, Types::Vec3 position)
 {
-    Transform &current = getTransform(index);
+    Transform &current = getTransform(entityId);
     current.position = position;
 }
 
-void TransformSystem::translate(size_t index, Types::Vec3 vector)
+void TransformSystem::translate(EntityManager::EntityId entityId, Types::Vec3 vector)
 {
-    Transform &current = getTransform(index);
+    Transform &current = getTransform(entityId);
     current.position.x += vector.x;
     current.position.y += vector.y;
     current.position.z += vector.z;
 }
 
-void TransformSystem::setRotation(size_t index, Types::Vec3 rotation)
+void TransformSystem::setRotation(EntityManager::EntityId entityId, Types::Vec3 rotation)
 {
-    Transform &current = getTransform(index);
+    Transform &current = getTransform(entityId);
     current.rotation = Math::eulerToQuaternion(rotation);
 }
 
-void TransformSystem::rotate(size_t index, Types::Vec3 vector)
+void TransformSystem::rotate(EntityManager::EntityId entityId, Types::Vec3 vector)
 {
-    Transform &current = getTransform(index);
+    Transform &current = getTransform(entityId);
     Types::Vec4 rotationVector = Math::eulerToQuaternion(vector);
     Types::Vec4 combined = Math::combineRotations(current.rotation, rotationVector);
     current.rotation = Math::normalizeQuat(combined);
 }
 
-void TransformSystem::setScale(size_t index, Types::Vec3 scale)
+void TransformSystem::setScale(EntityManager::EntityId entityId, Types::Vec3 scale)
 {
-    Transform &current = getTransform(index);
+    Transform &current = getTransform(entityId);
     current.scale = scale;
 }
 
-void TransformSystem::scale(size_t index, Types::Vec3 vector)
+void TransformSystem::scale(EntityManager::EntityId entityId, Types::Vec3 vector)
 {
-    Transform &current = getTransform(index);
+    Transform &current = getTransform(entityId);
     current.scale.x += vector.x;
     current.scale.y += vector.y;
     current.scale.z += vector.z;
@@ -91,43 +93,43 @@ void TransformSystem::scale(size_t index, Types::Vec3 vector)
 
 extern "C"
 {
-    void transform_system_attach_transform(size_t index)
+    void transform_system_attach_transform(EntityManager::EntityId entityId)
     {
-        TransformSystem::attachTransform(index);
+        TransformSystem::attachTransform(entityId);
     }
 
-    void transform_system_remove_transform(size_t index)
+    void transform_system_remove_transform(EntityManager::EntityId entityId)
     {
-        TransformSystem::removeTransform(index);
+        TransformSystem::removeTransform(entityId);
     }
 
-    void transfrom_system_set_position(size_t index, Vec3 position)
+    void transfrom_system_set_position(EntityManager::EntityId entityId, Vec3 position)
     {
-        TransformSystem::setPosition(index, position);
+        TransformSystem::setPosition(entityId, position);
     }
 
-    void transfrom_system_translate(size_t index, Vec3 vector)
+    void transfrom_system_translate(EntityManager::EntityId entityId, Vec3 vector)
     {
-        TransformSystem::translate(index, vector);
+        TransformSystem::translate(entityId, vector);
     }
 
-    void transfrom_system_set_rotation(size_t index, Vec3 rotation)
+    void transfrom_system_set_rotation(EntityManager::EntityId entityId, Vec3 rotation)
     {
-        TransformSystem::setRotation(index, rotation);
+        TransformSystem::setRotation(entityId, rotation);
     }
 
-    void transfrom_system_rotate(size_t index, Vec3 vector)
+    void transfrom_system_rotate(EntityManager::EntityId entityId, Vec3 vector)
     {
-        TransformSystem::rotate(index, vector);
+        TransformSystem::rotate(entityId, vector);
     }
 
-    void transfrom_system_set_scale(size_t index, Vec3 scale)
+    void transfrom_system_set_scale(EntityManager::EntityId entityId, Vec3 scale)
     {
-        TransformSystem::setScale(index, scale);
+        TransformSystem::setScale(entityId, scale);
     }
 
-    void transfrom_system_scale(size_t index, Vec3 vector)
+    void transfrom_system_scale(EntityManager::EntityId entityId, Vec3 vector)
     {
-        TransformSystem::scale(index, vector);
+        TransformSystem::scale(entityId, vector);
     }
 }

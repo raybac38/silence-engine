@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sol/sol.hpp>
+#include "../manager/entity_manager.hpp"
 
 namespace ScriptSystem
 {
@@ -11,20 +12,20 @@ namespace ScriptSystem
         sol::state luaState;
     };
 
-    void attachScript(size_t entityId, std::string path);
+    void attachScript(EntityManager::EntityId entityId, std::string path);
 
-    void removeScript(size_t entityId);
+    void removeScript(EntityManager::EntityId entityId);
 
-    std::string &getScriptName(size_t entityId);
+    std::string &getScriptName(EntityManager::EntityId entityId);
 
     void update(float dt);
 };
 
 extern "C"
 {
-    void script_system_attach_script(size_t entityId, const char *path);
+    void script_system_attach_script(EntityManager::EntityId entityId, const char *path);
 
-    void script_system_remove_script(size_t entityId);
+    void script_system_remove_script(EntityManager::EntityId entityId);
 
-    const char *script_system_get_script_name(size_t entityId);
+    const char *script_system_get_script_name(EntityManager::EntityId entityId);
 }

@@ -2,41 +2,59 @@
 #include "entity_manager.hpp"
 #include <optional>
 #include <vector>
+#include <stack>
+#include <cstdint>
 
 namespace
 {
-  // Ajout de std:: et passage de max_id en size_t
-  std::vector<size_t> free_ids;
-  size_t max_id = 0;
+
+  std::stack<uint32_t> reusable_id;
+  std::vector<uint32_t> generation;
+  uint32_t max_id;
 }
 
-size_t EntityManager::allocateEntityId()
+EntityManager::EntityId EntityManager::allocateEntityId()
 {
-  if (!free_ids.empty()) // .empty() est plus idiomatique en C++
+
+  EntityManager::EntityId entityId;
+  uint32_t id = 0;
+  uint32_t gen = 0;
+
+  if (!reusable_id.empty())
   {
-    size_t id = free_ids.back();
-    free_ids.pop_back();
-    return id;
+    id = reusable_id.top();
+    reusable_id.pop();
+    gen = generation.at(id) + 1;
+    generation.at(id) = gen;
   }
   else
   {
-    return max_id++;
+
+    max_id = max_id + 1;
+    id = max_id;
+    gen = 0;
+    generation.push_back(gen);
   }
+
+  entityId.id = id;
+  entityId.generation = gen;
+
+  return entityId;
 }
 
-void EntityManager::freeEntityId(size_t entityId)
+void EntityManager::freeEntityId(EntityManager::EntityId entityId)
 {
-  free_ids.push_back(entityId);
+  reusable_id.push(entityId.id);
 }
 
 extern "C"
 {
-  size_t entity_manager_allocate_entity_id()
+  EntityManager::EntityId entity_manager_allocate_entity_id()
   {
     return EntityManager::allocateEntityId();
   }
 
-  void entity_manager_free_entity_id(size_t entityId)
+  void entity_manager_free_entity_id(EntityManager::EntityId entityId)
   {
     EntityManager::freeEntityId(entityId);
   }

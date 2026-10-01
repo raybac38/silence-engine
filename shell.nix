@@ -38,7 +38,7 @@ pkgs.mkShell {
     wayland-protocols
     libxkbcommon
 
-    libGL
+    
     libGLU
 
     doxygen

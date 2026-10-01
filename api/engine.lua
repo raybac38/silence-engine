@@ -2,13 +2,18 @@ ffi = require("ffi")
 
 ffi.cdef [[
     // entity manager
-    size_t entity_manager_allocate_entity_id(void);
-    void entity_manager_free_id(size_t entity_id);
+
+    typedef struct {
+        uint64_t id;
+    } EntityId;
+
+    EntityId entity_manager_allocate_entity_id(void);
+    void entity_manager_free_id(EntityId entity_id);
 
     // script system
-    void script_system_attach_script(size_t entityId, const char* path);
-    void script_system_remove_script(size_t entityId);
-    const char *script_system_get_script_name(size_t entityId);
+    void script_system_attach_script(EntityId entityId, const char* path);
+    void script_system_remove_script(EntityId entityId);
+    const char *script_system_get_script_name(EntityId entityId);
 
     typedef struct {
         float x, y, z;
@@ -35,20 +40,20 @@ ffi.cdef [[
     void ressource_manager_release_mesh(MeshHandle handle);
 
     // transform system
-    void transform_system_attach_transform(size_t index);
-    void transform_system_remove_transform(size_t index);
+    void transform_system_attach_transform(EntityId entity_id);
+    void transform_system_remove_transform(EntityId entity_id);
 
-    void transfrom_system_set_position(size_t index, Vec3 position);
-    void transfrom_system_translate(size_t index, Vec3 vector);
-    void transfrom_system_set_rotation(size_t index, Vec3 rotation);
-    void transfrom_system_rotate(size_t index, Vec3 vector);
-    void transfrom_system_set_scale(size_t index, Vec3 scale);
-    void transfrom_system_scale(size_t index, Vec3 vector);
+    void transfrom_system_set_position(EntityId entity_id, Vec3 position);
+    void transfrom_system_translate(EntityId entity_id, Vec3 vector);
+    void transfrom_system_set_rotation(EntityId entity_id, Vec3 rotation);
+    void transfrom_system_rotate(EntityId entity_id, Vec3 vector);
+    void transfrom_system_set_scale(EntityId entity_id, Vec3 scale);
+    void transfrom_system_scale(EntityId entity_id, Vec3 vector);
 
     // render system
-    void render_system_attach_mesh(size_t entityId, MeshHandle handle);
-    void render_system_remove_mesh(size_t entityId);
-    void render_system_set_camera(size_t entityId);
+    void render_system_attach_mesh(EntityId entity_id, MeshHandle handle);
+    void render_system_remove_mesh(EntityId entity_id);
+    void render_system_set_camera(EntityId entity_id);
 
     // Input System
     bool input_is_held(int action_id);
@@ -158,7 +163,7 @@ function OnInit() end
 function OnUpdate(dt) end
 
 function _OnInit(id)
-    Entity.id = id;
+    Entity.id = ffi.cast("uint64_t", id);
     OnInit()
 end
 

@@ -6,6 +6,7 @@
 #include <bx/math.h>
 #include <bgfx/platform.h>
 #include "../manager/window_manager.hpp"
+#include "../manager/entity_manager.hpp"
 #include "transform_system.hpp"
 #include "../utils/sparse_set.tpp"
 #include <chrono>
@@ -17,7 +18,7 @@ namespace RenderSystem
     {
         struct RenderComponent
         {
-            size_t entity_id;
+            EntityManager::EntityId entity_id;
             bgfx::VertexBufferHandle vbh = BGFX_INVALID_HANDLE; // Vertex Buffer
             bgfx::IndexBufferHandle ibh = BGFX_INVALID_HANDLE;
             // Index Buffer
@@ -25,7 +26,7 @@ namespace RenderSystem
             // Material
         };
 
-        std::optional<size_t> camera_id;
+        std::optional<EntityManager::EntityId> camera_id;
 
         int render_width,
             render_height;
@@ -202,9 +203,9 @@ namespace RenderSystem
         render_height = height;
         render_width = width;
     }
-    void attachMesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle)
+    void attachMesh(EntityManager::EntityId entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle)
     {
-        if (sparseSet.has(entityId))
+        if (sparseSet.has(entityId.id))
         {
             removeMesh(entityId);
         }
@@ -230,11 +231,11 @@ namespace RenderSystem
             component.vbh = bgfx::createVertexBuffer(mem, vertexLayout);
         }
 
-        sparseSet.insert(entityId, component);
+        sparseSet.insert(entityId.id, component);
     }
-    void removeMesh(size_t entityId)
+    void removeMesh(EntityManager::EntityId entityId)
     {
-        RenderComponent &component = sparseSet.at(entityId);
+        RenderComponent &component = sparseSet.at(entityId.id);
 
         if (bgfx::isValid(component.vbh))
         {
@@ -247,9 +248,9 @@ namespace RenderSystem
             bgfx::destroy(component.ibh);
             component.ibh = BGFX_INVALID_HANDLE;
         }
-        sparseSet.delet(entityId);
+        sparseSet.delet(entityId.id);
     }
-    void setCamera(size_t entityId)
+    void setCamera(EntityManager::EntityId entityId)
     {
         camera_id = entityId;
         printf("entity id set");
@@ -258,16 +259,16 @@ namespace RenderSystem
 
 extern "C"
 {
-    void render_system_attach_mesh(size_t entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle)
+    void render_system_attach_mesh(EntityManager::EntityId entityId, RessourceManager::Manager<Geometry::Mesh>::Handle handle)
     {
         RenderSystem::attachMesh(entityId, handle);
     }
 
-    void render_system_remove_mesh(size_t entityId)
+    void render_system_remove_mesh(EntityManager::EntityId entityId)
     {
         RenderSystem::removeMesh(entityId);
     }
-    void render_system_set_camera(size_t entityId)
+    void render_system_set_camera(EntityManager::EntityId entityId)
     {
         RenderSystem::setCamera(entityId);
     }

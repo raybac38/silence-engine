@@ -4,7 +4,7 @@
 namespace
 {
     SparseSet<ScriptSystem::Script> sparseSet;
-    std::vector<size_t> onUpdateList;
+    std::vector<EntityManager::EntityId> onUpdateList;
 
     void setUpLuaState(sol::state &luaState, const std::string &scriptPath)
     {
@@ -20,11 +20,12 @@ namespace
     };
 }
 
-void ScriptSystem::attachScript(size_t entityId, std::string path)
+void ScriptSystem::attachScript(EntityManager::EntityId entityId, std::string path)
 {
-    if (sparseSet.has(entityId))
+    uint32_t id = entityId.id;
+    if (sparseSet.has(id))
     {
-        ScriptSystem::Script &script = sparseSet.at(entityId);
+        ScriptSystem::Script &script = sparseSet.at(id);
 
         script.luaState = sol::state();
         script.path = path;
@@ -35,22 +36,23 @@ void ScriptSystem::attachScript(size_t entityId, std::string path)
     {
         ScriptSystem::Script newScript;
         newScript.path = path;
-        sparseSet.insert(entityId, std::move(newScript));
+        sparseSet.insert(id, std::move(newScript));
 
         // Important, because callung setUpLuaState can use function call that require entityId to be present
 
-        ScriptSystem::Script &script = sparseSet.at(entityId);
+        ScriptSystem::Script &script = sparseSet.at(id);
         setUpLuaState(script.luaState, script.path);
     }
 
     onUpdateList.push_back(entityId);
 }
 
-void ScriptSystem::removeScript(size_t entityId)
+void ScriptSystem::removeScript(EntityManager::EntityId entityId)
 {
-    if (sparseSet.has(entityId))
+    uint32_t id = entityId.id;
+    if (sparseSet.has(id))
     {
-        sparseSet.delet(entityId);
+        sparseSet.delet(id);
     }
     else
     {
@@ -58,11 +60,12 @@ void ScriptSystem::removeScript(size_t entityId)
     }
 }
 
-std::string &ScriptSystem::getScriptName(size_t entityId)
+std::string &ScriptSystem::getScriptName(EntityManager::EntityId entityId)
 {
-    if (sparseSet.has(entityId))
+    uint32_t id = entityId.id;
+    if (sparseSet.has(id))
     {
-        return sparseSet.at(entityId).path;
+        return sparseSet.at(id).path;
     }
     else
     {
@@ -74,9 +77,9 @@ void ScriptSystem::update(float dt)
 {
     while (!onUpdateList.empty())
     {
-        size_t id = onUpdateList.back();
+        EntityManager::EntityId id = onUpdateList.back();
         onUpdateList.pop_back();
-        sol::protected_function onInit = sparseSet.at(id).luaState["_OnInit"];
+        sol::protected_function onInit = sparseSet.at(id.id).luaState["_OnInit"];
         if (onInit.valid())
         {
             auto result = onInit(id);
@@ -84,7 +87,7 @@ void ScriptSystem::update(float dt)
             if (!result.valid())
             {
                 sol::error err = result;
-                std::cerr << " [Lua Error Init] ID " << id << " : " << err.what() << std::endl;
+                std::cerr << " [Lua Error Init] ID " << id.id << id.generation << " : " << err.what() << std::endl;
             }
         }
     }
@@ -109,17 +112,17 @@ void ScriptSystem::update(float dt)
 
 extern "C"
 {
-    void script_system_attach_script(size_t entityId, const char *path)
+    void script_system_attach_script(EntityManager::EntityId entityId, const char *path)
     {
         ScriptSystem::attachScript(entityId, path);
     }
 
-    void script_system_remove_script(size_t entityId)
+    void script_system_remove_script(EntityManager::EntityId entityId)
     {
         ScriptSystem::removeScript(entityId);
     }
 
-    const char *script_system_get_script_name(size_t entityId)
+    const char *script_system_get_script_name(EntityManager::EntityId entityId)
     {
         std::string &name = ScriptSystem::getScriptName(entityId);
         return name.c_str();

@@ -70,7 +70,7 @@ namespace Core
 
     void init()
     {
-        size_t id = EntityManager::allocateEntityId();
+        EntityManager::EntityId id = EntityManager::allocateEntityId();
         ScriptSystem::attachScript(id, "./assets/scripts/main.lua");
     }
 
