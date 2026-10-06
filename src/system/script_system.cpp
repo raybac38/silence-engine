@@ -79,6 +79,8 @@ void ScriptSystem::update(float dt)
     {
         EntityManager::EntityId id = onUpdateList.back();
         onUpdateList.pop_back();
+        luaState.new_usertype<EntityManager::EntityId>("EntityId",
+                                                       "id", &EntityManager::EntityId::id);
         sol::protected_function onInit = sparseSet.at(id.id).luaState["_OnInit"];
         if (onInit.valid())
         {

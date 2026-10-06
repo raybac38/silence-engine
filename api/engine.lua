@@ -4,7 +4,8 @@ ffi.cdef [[
     // entity manager
 
     typedef struct {
-        uint64_t id;
+        uint32_t index;
+        uint32_t generation;
     } EntityId;
 
     EntityId entity_manager_allocate_entity_id(void);
@@ -163,7 +164,7 @@ function OnInit() end
 function OnUpdate(dt) end
 
 function _OnInit(id)
-    Entity.id = ffi.cast("uint64_t", id);
+    Entity.id = ffi.new("EntityId", id)
     OnInit()
 end
 
