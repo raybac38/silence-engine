@@ -29,7 +29,7 @@ namespace WindowManager
         }
         std::cout << "[INFO] SDL init" << std::endl;
 
-        window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE);
+        window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 
         if (!window)
         {
@@ -108,3 +108,23 @@ namespace WindowManager
         SDL_SetWindowTitle(window, title.c_str());
     }
 };
+
+extern "C"
+{
+    /**
+     * Set mouse capture
+     * return true if success
+     */
+    bool window_manager_caputre_mouse(bool enable)
+    {
+        if (enable)
+        {
+            SDL_HideCursor();
+            SDL_WarpMouseInWindow(WindowManager::window, 0, 0);
+        }
+        else
+        {
+            SDL_ShowCursor();
+        }
+    }
+}

@@ -58,3 +58,8 @@ namespace WindowManager
      */
     void setTitle(std::string title);
 };
+
+extern "C"
+{
+    bool window_manager_caputre_mouse(bool enable);
+}

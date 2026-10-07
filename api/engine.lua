@@ -11,6 +11,9 @@ ffi.cdef [[
     EntityId entity_manager_allocate_entity_id(void);
     void entity_manager_free_id(EntityId entity_id);
 
+    // window manager
+    bool window_manager_caputre_mouse(bool enable);
+
     // script system
     void script_system_attach_script(EntityId entityId, const char* path);
     void script_system_remove_script(EntityId entityId);
@@ -81,6 +84,12 @@ function Vec2(x, y)
     return ffi.new("Vec2", x, y)
 end
 
+-- WINDOW MANAGER
+
+WindowManager = {}
+
+function WindowManager.captureMouse(enable) return ffi.C.window_manager_caputre_mouse(enable) end
+
 -- ENTITY MANAGER
 
 EntityManager = {}
@@ -128,7 +137,7 @@ function TransformSystem.setScale(entityId, scale) return ffi.C.transfrom_system
 function TransformSystem.scale(entityId, vector) return ffi.C.transfrom_system_scale(entityId, vector) end
 
 KeyCode = {
-    Space = 44, W = 26, Z = 122, Q = 113, A = 4, S = 115, D = 100
+    Space = 44, W = 26, Z = 122, Q = 113, A = 4, S = 115, D = 100, Escape = 27
 }
 
 -- RENDER SYSTEM
