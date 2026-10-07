@@ -15,6 +15,7 @@ namespace WindowManager
         int window_width = 0;
         int window_height = 0;
         SDL_Window *window = nullptr;
+        bool is_pointer_locked = false;
     }
 
     bool open(const std::string &title, int width, int height)
@@ -92,6 +93,10 @@ namespace WindowManager
                 break;
             }
         }
+
+        if(is_pointer_locked){
+            SDL_WarpMouseInWindow(WindowManager::window, window_width/ 2, window_height/2);
+        }
     }
 
     int getWidth()
@@ -107,24 +112,36 @@ namespace WindowManager
     {
         SDL_SetWindowTitle(window, title.c_str());
     }
-};
 
-extern "C"
-{
-    /**
-     * Set mouse capture
-     * return true if success
-     */
-    bool window_manager_caputre_mouse(bool enable)
-    {
-        if (enable)
+    bool isPointerLocked(){
+        return is_pointer_locked;
+    }
+
+    void lockPointer(bool enable){
+        is_pointer_locked = enable;
+        if(is_pointer_locked)
         {
             SDL_HideCursor();
-            SDL_WarpMouseInWindow(WindowManager::window, 0, 0);
         }
         else
         {
             SDL_ShowCursor();
         }
+    }
+};
+
+extern "C"
+{
+
+    bool window_manager_is_mouse_locked(){
+        return WindowManager::isPointerLocked(); 
+    }
+    
+    /**
+     * Allow to lock the mouse
+     */
+    void window_manager_lock_mouse(bool enable)
+    {
+        WindowManager::lockPointer(enable);
     }
 }

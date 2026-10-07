@@ -12,7 +12,8 @@ ffi.cdef [[
     void entity_manager_free_id(EntityId entity_id);
 
     // window manager
-    bool window_manager_caputre_mouse(bool enable);
+    void window_manager_lock_mouse(bool enable);
+    bool window_manager_is_mouse_locked();
 
     // script system
     void script_system_attach_script(EntityId entityId, const char* path);
@@ -55,6 +56,11 @@ ffi.cdef [[
     void transfrom_system_set_scale(EntityId entity_id, Vec3 scale);
     void transfrom_system_scale(EntityId entity_id, Vec3 vector);
 
+    // Nouvelles fonctions à ajouter :
+    void transform_system_rotate_yaw_pitch(EntityId entity_id, float yaw, float pitch);
+    void transform_system_rotate_world(EntityId entity_id, Vec3 vector);
+    void transform_system_translate_local(EntityId entity_id, Vec3 vector);
+
     // render system
     void render_system_attach_mesh(EntityId entity_id, MeshHandle handle);
     void render_system_remove_mesh(EntityId entity_id);
@@ -88,7 +94,9 @@ end
 
 WindowManager = {}
 
-function WindowManager.captureMouse(enable) return ffi.C.window_manager_caputre_mouse(enable) end
+function WindowManager.isMouseLocked() return ffi.C.window_manager_is_mouse_locked() end
+
+function WindowManager.lockMouse(enable) return ffi.C.window_manager_lock_mouse(enable) end
 
 -- ENTITY MANAGER
 
@@ -135,6 +143,13 @@ function TransformSystem.rotate(entityId, vector) return ffi.C.transfrom_system_
 function TransformSystem.setScale(entityId, scale) return ffi.C.transfrom_system_set_scale(entityId, scale) end
 
 function TransformSystem.scale(entityId, vector) return ffi.C.transfrom_system_scale(entityId, vector) end
+
+-- Nouveaux wrappers Lua :
+function TransformSystem.rotateYawPitch(entityId, yaw, pitch) return ffi.C.transform_system_rotate_yaw_pitch(entityId, yaw, pitch) end
+
+function TransformSystem.rotateWorld(entityId, vector) return ffi.C.transform_system_rotate_world(entityId, vector) end
+
+function TransformSystem.translateLocal(entityId, vector) return ffi.C.transform_system_translate_local(entityId, vector) end
 
 KeyCode = {
     Space = 44, W = 26, Z = 122, Q = 113, A = 4, S = 115, D = 100, Escape = 27

@@ -61,5 +61,7 @@ namespace WindowManager
 
 extern "C"
 {
-    bool window_manager_caputre_mouse(bool enable);
+    bool window_manager_is_mouse_locked();
+    
+    void window_manager_lock_mouse(bool enable);
 }

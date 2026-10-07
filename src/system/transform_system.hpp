@@ -19,6 +19,10 @@ namespace TransformSystem
 
     void removeTransform(EntityManager::EntityId entityId);
 
+    void rotateYawPitch(EntityManager::EntityId entityId, float yaw, float pitch);  
+
+    void translateLocal(EntityManager::EntityId entityId, Types::Vec3 vector);
+
     TransformSystem::Transform &getTransform(EntityManager::EntityId entityId);
 
     void setPosition(EntityManager::EntityId entityId, Types::Vec3 position);
@@ -28,6 +32,8 @@ namespace TransformSystem
     void setRotation(EntityManager::EntityId entityId, Types::Vec3 rotation);
 
     void rotate(EntityManager::EntityId entityId, Types::Vec3 vector);
+
+    void rotateWorld(EntityManager::EntityId entityId, Types::Vec3 angles);
 
     void setScale(EntityManager::EntityId entityId, Types::Vec3 scale);
 
@@ -53,4 +59,11 @@ extern "C"
     void transfrom_system_set_scale(EntityManager::EntityId entityId, Vec3 scale);
 
     void transfrom_system_scale(EntityManager::EntityId entityId, Vec3 vector);
+
+    void transform_system_rotate_yaw_pitch(EntityManager::EntityId entityId, float yaw, float pitch);
+
+    void transform_system_rotate_world(EntityManager::EntityId entityId, Vec3 vector);
+
+    void transform_system_translate_local(EntityManager::EntityId entityId, Vec3 vector);
+
 }
