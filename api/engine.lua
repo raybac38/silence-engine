@@ -4,8 +4,8 @@ ffi.cdef [[
     // entity manager
 
     typedef struct {
-        uint32_t index;
         uint32_t generation;
+        uint32_t index;
     } EntityId;
 
     EntityId entity_manager_allocate_entity_id(void);
@@ -15,6 +15,7 @@ ffi.cdef [[
     void script_system_attach_script(EntityId entityId, const char* path);
     void script_system_remove_script(EntityId entityId);
     const char *script_system_get_script_name(EntityId entityId);
+    EntityId scrip_system_get_current_entity_id();
 
     typedef struct {
         float x, y, z;
@@ -33,8 +34,8 @@ ffi.cdef [[
     // Ressource manager
 
     typedef struct {
-        uint32_t index;
         uint32_t generation;
+        uint32_t index;
     } MeshHandle;
 
     MeshHandle ressource_manager_acquire_mesh(const char* path);
@@ -163,8 +164,8 @@ function OnInit() end
 
 function OnUpdate(dt) end
 
-function _OnInit(id)
-    Entity.id = ffi.new("EntityId", id)
+function _OnInit()
+    Entity.id = ffi.C.scrip_system_get_current_entity_id()
     OnInit()
 end
 

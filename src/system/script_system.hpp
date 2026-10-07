@@ -10,6 +10,7 @@ namespace ScriptSystem
     {
         std::string path;
         sol::state luaState;
+        EntityManager::EntityId entityId;
     };
 
     void attachScript(EntityManager::EntityId entityId, std::string path);
@@ -19,6 +20,8 @@ namespace ScriptSystem
     std::string &getScriptName(EntityManager::EntityId entityId);
 
     void update(float dt);
+
+    EntityManager::EntityId getCurrentEntityId();
 };
 
 extern "C"
@@ -28,4 +31,6 @@ extern "C"
     void script_system_remove_script(EntityManager::EntityId entityId);
 
     const char *script_system_get_script_name(EntityManager::EntityId entityId);
+
+    const EntityManager::EntityId scrip_system_get_current_entity_id();
 }

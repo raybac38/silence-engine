@@ -5,6 +5,7 @@ namespace
 {
     SparseSet<ScriptSystem::Script> sparseSet;
     std::vector<EntityManager::EntityId> onUpdateList;
+    EntityManager::EntityId currentEntityIdExecuted;
 
     void setUpLuaState(sol::state &luaState, const std::string &scriptPath)
     {
@@ -77,19 +78,18 @@ void ScriptSystem::update(float dt)
 {
     while (!onUpdateList.empty())
     {
-        EntityManager::EntityId id = onUpdateList.back();
+        currentEntityIdExecuted = onUpdateList.back();
         onUpdateList.pop_back();
-        luaState.new_usertype<EntityManager::EntityId>("EntityId",
-                                                       "id", &EntityManager::EntityId::id);
-        sol::protected_function onInit = sparseSet.at(id.id).luaState["_OnInit"];
+
+        sol::protected_function onInit = sparseSet.at(currentEntityIdExecuted.id).luaState["_OnInit"];
         if (onInit.valid())
         {
-            auto result = onInit(id);
+            auto result = onInit();
 
             if (!result.valid())
             {
                 sol::error err = result;
-                std::cerr << " [Lua Error Init] ID " << id.id << id.generation << " : " << err.what() << std::endl;
+                std::cerr << " [Lua Error Init] ID " << currentEntityIdExecuted.id << currentEntityIdExecuted.generation << " : " << err.what() << std::endl;
             }
         }
     }
@@ -97,6 +97,7 @@ void ScriptSystem::update(float dt)
     {
         for (ScriptSystem::Script &script : sparseSet.data())
         {
+            currentEntityIdExecuted = script.entityId;
             sol::protected_function onUpdate = script.luaState["_OnUpdate"];
             if (onUpdate.valid())
             {
@@ -110,6 +111,11 @@ void ScriptSystem::update(float dt)
             }
         }
     }
+}
+
+EntityManager::EntityId ScriptSystem::getCurrentEntityId()
+{
+    return currentEntityIdExecuted;
 }
 
 extern "C"
@@ -128,5 +134,9 @@ extern "C"
     {
         std::string &name = ScriptSystem::getScriptName(entityId);
         return name.c_str();
+    }
+    const EntityManager::EntityId scrip_system_get_current_entity_id()
+    {
+        return ScriptSystem::getCurrentEntityId();
     }
 }
